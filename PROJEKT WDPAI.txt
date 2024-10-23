@@ -1,0 +1,8 @@
+PROJEKT WDPAI
+----------------------------------------
+- dodawanie/edycja/usuwanie produktu/kategori
+- dodawanie/edycja klientow
+- generowanie paragonu/faktury
+- monitorowanie sprzedaży
+- użytkownicy seller/customer/admin
+
