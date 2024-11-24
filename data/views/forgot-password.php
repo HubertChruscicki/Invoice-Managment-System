@@ -13,7 +13,7 @@
     <div class="main-container">
         <div class="container">
 
-                <form class = "forgot" action = "login" method="post">
+                <form class = "forgot" action = "forgot" method="post">
                     <div class="container__forgot-section">
                             <h1 class="container__forgot-section--header">Forgot password</h1>
                             <div class="container__forgot-section--popup">

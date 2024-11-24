@@ -1,19 +1,52 @@
-version: '3'  
+version: "3"
 
 services:
   web:
-      build:
-        context: .
-        dockerfile: docker/nginx/Dockerfile
-      ports:
-        - "8080:80"
-      volumes:
-        - .:/app/
-      links:
-       - php
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/app/
+    links:
+      - php
+    networks:
+      - wdpai-network
+
   php:
-      build:
-        context: .
-        dockerfile: docker/php/Dockerfile
-      volumes:
-        - .:/app/
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    volumes:
+      - .:/app/
+    networks:
+      - wdpai-network
+
+  db:
+    container_name: pg_container
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: wdpai
+    ports:
+      - "5432:5432"
+    networks:
+      - wdpai-network
+
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+    networks:
+      - wdpai-network
+
+networks:
+  wdpai-network:

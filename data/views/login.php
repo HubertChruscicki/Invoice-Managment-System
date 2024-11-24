@@ -17,13 +17,25 @@
                 <img class="container__image-section--image" src="data/img/login-image.jpg" alt="">
             </div>
 
-        <form class = "login" action = "login" method="post">
+        <form class="login" action = "login" method="POST">
             <div class = "container__login-section">
-                <h1 class="container__login-section--header">Invoice Manager</h1>
-                <!-- <div class="form-content-container-info"></div> -->
+                <h1 class="container__login-section--header <?php echo isset($message) ? 'header-with-message' : ''; ?>">
+                    Invoice Manager
+                </h1>
+
+                <?php if (isset($messages)): ?>
+                    <div class="form-content-container-info">
+                        <?php
+                        foreach ($messages as $message) {
+                            echo $message;
+                        }
+                        ?>
+                    </div>
+                <?php endif; ?>
+
                 <input name="email" type="text" class="container__login-section--input" placeholder="Enter your email">
                 <input name = "pass" type="password" class="container__login-section--input" placeholder="Enter your password">
-                <p class="container__login-section--forgot-pass"><a href="index.php">Forgot Password?</a></p>
+                <p class="container__login-section--forgot-pass"><a href="forgot_password">Forgot Password?</a></p>
                 <button class="container__login-section--button" type="submit" >Login</button>
                 <span class="container__login-section--footer">Don't have an account? <a href="register">Sign up</a></span>
             </div>
@@ -31,5 +43,5 @@
 
     </div>
 </body>
-</html> 
+</html>
 

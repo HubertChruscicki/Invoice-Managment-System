@@ -65,15 +65,23 @@ body{
     margin-bottom: 70px;
 }
 
-.form-content-container-info{
+.header-with-message {
+    margin-bottom: 10px;
+}
+
+.form-content-container-info {
     height: 70px;
     width: 400px;
+    font-size: 1.3em;
     background-color: rgb(202, 52, 52);
+    color: white;
     border-radius: 5px;
-    margin: 8px;
-    display: none; 
-    /* po displau na none dac header 10px botoom */
+    margin-bottom: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+/*pomocy*/
 
 .container__login-section--input{
     border: 0.005px solid #d4d4d4;
@@ -189,6 +197,12 @@ body{
         margin-top: 20px;   
         margin-bottom: 20px;
     }
+
+    .form-content-container-info {
+        width: 95%;
+        font-size: 1.1em;
+    }
+
     .container__login-section--footer {
         text-align: center;
         align-self: center;

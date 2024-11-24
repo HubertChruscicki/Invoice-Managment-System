@@ -13,22 +13,33 @@
     <div class="main-container">
         <div class="container">
 
-                <form class = "register" action = "login" method="post">
+                <form class = "register" action = "register" method="post">
                     <div class="container__register-section">
                             <h1 class="container__register-section--header">Register yourself</h1>
                             <!-- <div class="container__register-section--info"></div> -->
+                        <?php if (isset($messages)): ?>
+                            <div class="form-content-container-info">
+                                <?php
+                                foreach ($messages as $message) {
+                                    echo $message;
+                                }
+                                ?>
+                            </div>
+                        <?php endif; ?>
                             <input name="email" type="email" class="container__register-section--input" placeholder="Enter your email">
-                            <input name="companyName" type="text" class="container__register-section--input" placeholder="Enter company name">
-                            <input name="companyAdress" type="text" class="container__register-section--input" placeholder="Enter adress">
-                            <input name="companyCity" type="text" class="container__register-section--input" placeholder="Enter city">
+                            <input name="company_name" type="text" class="container__register-section--input" placeholder="Enter company name">
+                            <input name="nip" type="text" class="container__register-section--input" placeholder="Enter NIP">
+                            <input name="adress" type="text" class="container__register-section--input" placeholder="Enter adress">
+                            <input name="city" type="text" class="container__register-section--input" placeholder="Enter city">
+                            <input name="zip_code" type="text" class="container__register-section--input" placeholder="Enter zip code">
 
                             <select name="country" id="country" class="container__register-section--input container__register-section--select">
                                 <option value="">Select a country</option>
-                                <option value="pl">Poland</option>
-                                <option value="de">Germany</option>
-                                <option value="fr">France</option>
-                                <option value="it">Italy</option>
-                                <option value="es">Spain</option>
+                                <option value="poland">Poland</option>
+                                <option value="germany">Germany</option>
+                                <option value="france">France</option>
+                                <option value="italy">Italy</option>
+                                <option value="spain">Spain</option>
                             </select>
 
                             <input name = "pass" type="password" class="container__register-section--input" placeholder="Enter your password">
