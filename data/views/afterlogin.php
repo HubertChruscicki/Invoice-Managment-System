@@ -14,3 +14,22 @@
     </form>
 </body>
 </html>
+
+<?php
+require_once __DIR__.'/../../src/repository/CompanyRepository.php'; // Corrected the typo in the filename
+require_once __DIR__.'/../../src/models/Company.php';  // Same for other includes
+
+$cmpnrep = new CompanyRepository();
+$cmpn = $cmpnrep->getCompany(2); // Corrected the method call syntax to use -> instead of .
+if($cmpn != null){
+    echo "Company ID: " . $cmpn->getId() . "<br>";
+    echo "Name: " . $cmpn->getName() . "<br>";
+    echo "NIP: " . $cmpn->getNip() . "<br>";
+    echo "Address: " . $cmpn->getAddress() . "<br>";
+    echo "City: " . $cmpn->getCity() . "<br>";
+    echo "Zip Code: " . $cmpn->getZipCode() . "<br>";
+    echo "Country: " . $cmpn->getCountry() . "<br>";
+}
+else{
+    echo "Sigma";
+}

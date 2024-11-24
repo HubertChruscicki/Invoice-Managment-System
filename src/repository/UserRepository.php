@@ -1,10 +1,23 @@
 <?php
 
-
 require_once 'Repository.php';
+require_once 'CompanyRepository.php';
 require_once __DIR__.'/../models/User.php';
 class UserRepository extends Repository
 {
+    protected static $instance = null;
+    protected function  __construct(){
+        parent::__construct();
+    }
+
+    public static function getInstance() : Repository{
+        if(!isset(self::$instance))
+        {
+            self::$instance = new UserRepository();
+        }
+        return self::$instance;
+    }
+
     public function getUser(string $email): ?User
     {
 
@@ -20,6 +33,7 @@ class UserRepository extends Repository
         return new User(
             $user['id'],
             $user['id_user_role'],
+            $user['id_company'],
             $user['email'],
             $user['password'],
             $user['name'],
@@ -27,21 +41,6 @@ class UserRepository extends Repository
         );
     }
 
-    public function addCompany(string $company_name, string $nip, string $address, string $city, string $zip_code, string $country): void
-    {
-            $stmt = $this->database->connect()->prepare('
-            INSERT INTO public.company (name, nip, address, city, zip_code, country)
-            VALUES (?, ?, ?, ?, ?, ?)
-            ');
-            $stmt->execute([
-                $company_name,
-                $nip,
-                $address,
-                $city,
-                $zip_code,
-                $country
-            ]);
-    } //TODO company repository walidacja
 
     public function addUser(int $id_company, int $id_user_role, string $email, string $pass, string $name, string $surname): void
     {
@@ -62,7 +61,8 @@ class UserRepository extends Repository
     public function addAdminUser(string $email, string $company_name, string $nip, string $address, string $city, string $zip_code, string $country, string $pass)
     {
         try {
-            $this->addCompany($company_name, $nip, $address, $city, $zip_code, $country);
+            $company = CompanyRepository::getInstance();
+            $company->addCompany($company_name, $nip, $address, $city, $zip_code, $country);
         } catch (Exception $e) {
             throw new Exception("Company adding error: " . $e->getMessage());
         }

@@ -8,8 +8,7 @@ class SecurityController extends AppController
 
     public function login()
     {
-        $userRepository = new UserRepository();
-
+        $userRepository = UserRepository::getInstance();
         if (!$this->isPost()) {
             return $this->render('login');
         }
@@ -69,26 +68,30 @@ class SecurityController extends AppController
             return;
         }
 
-
         $email = strtolower($email);
-        $userRepository = new UserRepository();
+        $userRepository = UserRepository::getInstance();
+        $companyRepository = CompanyRepository::getInstance();
 
-
-        //TODO TAKA SAMA WALIDACJA DLA COMPANY REPOSITORY //STWORZYC MODEL COMPANY //STWORZYC COMPANYREPOSITORY
-        $user = $userRepository->getUser($email); //TODO TU BEDZIE COMPANY = COMAPNY REPOSITORY NA SWITCHU GET KAZDEJ RZECZY KTORA FIRMA NIE MOZE MIEC TAKIEJ SAMEJ
+        $user = $userRepository->getUser($email);
         if($user){
             $this->render('register', ['messages' => ['User with this email already exist!']]);
             return;
         }
 
-
+        $comapny = $companyRepository->doesCompanyExist($company_name,  $nip, $address, $city);
+        if($comapny){
+            echo "sigma";
+            $this->render('register', ['messages' => ['Company details belong to other one!']]);
+            return;
+        }
 
         $hash = password_hash($password, PASSWORD_BCRYPT);
-        $userRepository->addAdminUser($email, $company_name, $nip, $address, $city, $zip, $country, $hash); //TODO TU BEDZIE COMPANYREPOSITROY->ADD
+        $userRepository->addAdminUser($email, $company_name, $nip, $address, $city, $zip, $country, $hash);
+
         return $this->render('login', ['messages' => ['Successfully registered!']]);
     }
 
-    public function logout(){
+    public function logout(){ //TODO
         session_unset();
         session_destroy();
 //        $this->render('login');
