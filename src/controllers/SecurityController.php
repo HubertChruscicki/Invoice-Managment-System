@@ -23,7 +23,8 @@ class SecurityController extends AppController
         if(password_verify($password, $user->getPassword())){
             $_SESSION['emial'] = $user->getEmail();
             $_SESSION['id'] = $user->getId();
-            $this->render('afterlogin');
+            $this->render('main');
+
 //            $url = "http://$_SERVER[HTTP_HOST]";
 //            header("Location: {$url}/afterlogin");
         }
