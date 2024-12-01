@@ -3,6 +3,7 @@ session_start();
 require_once 'AppController.php';
 require_once __DIR__.'/../models/User.php';
 require_once __DIR__.'/../repository/UserRepository.php';
+require_once __DIR__.'/../repository/CategoryRepository.php';
 class SecurityController extends AppController
 {
 

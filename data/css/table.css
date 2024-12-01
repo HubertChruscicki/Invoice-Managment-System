@@ -35,7 +35,7 @@
     min-height: 100px;
     overflow-y: auto; /* Dodaj przewijanie w pionie */
     margin: 0 auto;
-    width: 80%;
+    width: 100%;
     border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

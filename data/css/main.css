@@ -141,7 +141,7 @@ padding-left: 30px;
 
 .layout__main-content {
     height: 100%;
-    width: 75%;
+    width: 90%;
     background-color: hsl(0, 0%, 90%);
     flex-grow: 1; /* Aby wypełniał całą pozostałą przestrzeń */
     display: flex;

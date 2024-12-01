@@ -33,19 +33,23 @@
 <div class="layout">
     <aside class="layout__sidebar" id="sidebar">
         <ul class="layout__sidebar-menu">
-            <li class="layout__sidebar-menu--item" onclick="setActive(this)">
+            <li class="layout__sidebar-menu--item" data-menu-bar="Dashboard" onclick="switchMainContent(this)">
                 <img src="data/img/dashboard-icon.png" alt="">
                 <p>Dashboard</p>
             </li>
-            <li class="layout__sidebar-menu--item" onclick="setActive(this)">
+            <li class="layout__sidebar-menu--item" data-menu-bar="Products" onclick="switchMainContent(this)">
                 <img src="data/img/products-icon.png" alt="">
                 <p>Products</p>
             </li>
-            <li class="layout__sidebar-menu--item" onclick="setActive(this)">
+            <li class="layout__sidebar-menu--item" data-menu-bar="Categories" onclick="switchMainContent(this)">
+                <img src="data/img/products-icon.png" alt="">
+                <p>Categories</p>
+            </li>
+            <li class="layout__sidebar-menu--item" data-menu-bar="Clients" onclick="switchMainContent(this)">
                 <img src="data/img/Clients-icon.png" alt="">
                 <p>Clients</p>
             </li>
-            <li class="layout__sidebar-menu--item" onclick="setActive(this)">
+            <li class="layout__sidebar-menu--item" data-menu-bar="Invoices" onclick="switchMainContent(this)">
                 <img src="data/img/Invoices-icon.png" alt="">
                 <p>Invoices</p>
             </li>
@@ -53,85 +57,15 @@
     </aside>
 
 
-
-
-    <div class="layout__main-content">
-        <div class="main-content__toolbar">
-            <input class="main-content__toolbar-search" type="text" placeholder="Search products..." >
-            <button class="main-content__toolbar-button">Add Product</button>
-        </div>
-        <div class="main-content__table-container">
-            <table class="main-content__table">
-                <thead class="main-content__table-header">
-                <tr>
-                    <th class="main-content__table-header-cell">Product Name</th>
-                    <th class="main-content__table-header-cell">Category</th>
-                    <th class="main-content__table-header-cell">Price Netto</th>
-                    <th class="main-content__table-header-cell">VAT</th>
-                    <th class="main-content__table-header-cell">VAT Value</th>
-                    <th class="main-content__table-header-cell">Price Brutto</th>
-                    <th class="main-content__table-header-cell">Actions</th>
-                </tr>
-                </thead>
-                <tbody class="main-content__table-body">
-                <?php
-                $data = [
-                    ['Wireless Mouse', 'Electronics', '$20', 23, '3,17', '16,87'],
-                    ['Office Chair', 'Furniture', '$40', 46, '6,34', '33,64'],
-                    ['Laptop Stand', 'Electronics', '$30', 15, '4,20', '25,80'],
-                    ['Desk Lamp', 'Furniture', '$15', 32, '2,54', '12,46'],
-                    ['Wireless Mouse', 'Electronics', '$20', 23, '3,17', '16,87'],
-                    ['Office Chair', 'Furniture', '$40', 46, '6,34', '33,64'],
-                    ['Laptop Stand', 'Electronics', '$30', 15, '4,20', '25,80'],
-                    ['Desk Lamp', 'Furniture', '$15', 32, '2,54', '12,46'],
-                    ['Wireless Mouse', 'Electronics', '$20', 23, '3,17', '16,87'],
-                    ['Office Chair', 'Furniture', '$40', 46, '6,34', '33,64'],
-                    ['Laptop Stand', 'Electronics', '$30', 15, '4,20', '25,80'],
-                    ['Desk Lamp', 'Furniture', '$15', 32, '2,54', '12,46'],
-                    ['Wireless Mouse', 'Electronics', '$20', 23, '3,17', '16,87'],
-                    ['Office Chair', 'Furniture', '$40', 46, '6,34', '33,64'],
-                    ['Laptop Stand', 'Electronics', '$30', 15, '4,20', '25,80'],
-                    ['Desk Lamp', 'Furniture', '$15', 32, '2,54', '12,46']
-                ];
-
-                foreach ($data as $item) {
-                    echo "<tr class='main-content__table-row'>
-                            <td class='main-content__table-cell'>{$item[0]}</td>
-                            <td class='main-content__table-cell'>{$item[1]}</td>
-                            <td class='main-content__table-cell'>{$item[2]}</td>
-                            <td class='main-content__table-cell'>{$item[3]}</td>
-                            <td class='main-content__table-cell'>{$item[4]}</td>
-                            <td class='main-content__table-cell'>{$item[5]}</td>
-                            <td class='main-content__table-cell'>
-                                <button class='main-content__action-button main-content__action-button--edit'>Edit</button>
-                                <button class='main-content__action-button main-content__action-button--delete'>Delete</button>
-                            </td>
-                        </tr>";
-                }
-                ?>
-                </tbody>
-            </table>
-    </div>
-        <div class="main-content__pagination">
-            <button class="main-content__pagination-button main-content__pagination-button--prev">&lt;</button>
-            <button class="main-content__pagination-page" onclick="goToPage(1)">1</button>
-            <button class="main-content__pagination-page main-content__pagination-page--active"">2</button>
-            <button class="main-content__pagination-page">3</button>
-            <button class="main-content__pagination-page">4</button>
-            <button class="main-content__pagination-page">5</button>
-            <button class="main-content__pagination-button main-content__pagination-button--next">&gt;</button>
-        </div>
-    </div>
+    <div class="layout__main-content"></div>
 </div>
 
-
-<script>
-    function setActive(element) {
-        const menuItems = document.querySelectorAll('.layout__sidebar-menu--item');
-        menuItems.forEach(item => item.classList.remove('active'));
-        element.classList.add('active');
-    }
-</script>
+<!--<script>-->
+<!--    document.addEventListener('DOMContentLoaded', () => {-->
+<!--        loadActiveSection();-->
+<!--    });-->
+<!--</script>-->
+<!--<script src="data/js/MenuRouter.js"></script>-->
 
 </body>
 </html>

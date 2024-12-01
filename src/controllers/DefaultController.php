@@ -6,7 +6,7 @@ class DefaultController extends AppController {
 
     public function index()
     {
-        $this->render('main'); //TODO
+        $this->render('login'); //TODO
     }
 
     public function login()
@@ -21,10 +21,6 @@ class DefaultController extends AppController {
     public function forgot_password()
     {
         $this->render('forgot-password');
-    }
-    public function afterlogin()
-    {
-        $this->render('afterlogin');
     }
 
 
