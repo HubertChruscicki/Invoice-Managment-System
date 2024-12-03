@@ -25,9 +25,6 @@ class SecurityController extends AppController
             $_SESSION['emial'] = $user->getEmail();
             $_SESSION['id'] = $user->getId();
             $this->render('main');
-
-//            $url = "http://$_SERVER[HTTP_HOST]";
-//            header("Location: {$url}/afterlogin");
         }
         else{
             return $this->render('login', ['messages' => ['Wrong password!']]);
@@ -93,12 +90,9 @@ class SecurityController extends AppController
         return $this->render('login', ['messages' => ['Successfully registered!']]);
     }
 
-    public function logout(){ //TODO
+    public function logout(){
         session_unset();
         session_destroy();
-//        $this->render('login');
-        $url = "http://$_SERVER[HTTP_HOST]";
-        header("Location: {$url}/login");
-        exit;
+        $this->render('login');
     }
 }

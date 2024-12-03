@@ -46,6 +46,17 @@ class CategoryRepository extends Repository
         );
     }
 
+    public function getCategoires(int $limit, int $offset)
+    {
+        $stmt = $this->database->connect()->prepare("SELECT * FROM public.product_categories LIMIT :limit OFFSET :offset");
+        $stmt->bindParam(":limit", $limit, PDO::PARAM_INT);
+        $stmt->bindParam(":offset", $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
     public function addCategory(string $category_name, float $vat): void
     {
         $stmt = $this->database->connect()->prepare('

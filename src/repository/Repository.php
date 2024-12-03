@@ -18,6 +18,7 @@ class Repository
         return self::$instance;
     }
 
+
     private function __clone() {}
 
     public function __wakeup()

@@ -20,7 +20,6 @@ class UserRepository extends Repository
 
     public function getUser(string $email): ?User
     {
-
         $stmt = $this->database->connect()->prepare("SELECT * FROM public.users WHERE email = :email");
         $stmt->bindParam(":email", $email, PDO::PARAM_STR);
         $stmt->execute();
@@ -39,6 +38,19 @@ class UserRepository extends Repository
             $user['name'],
             $user['surname']
         );
+    }
+
+    public function findUserInfo(int $id)
+    {
+        $stmt = $this->database->connect()->prepare("SELECT u.id, u.id_user_role, u.id_company, u.name, u.surname, u.email, ur.role_name
+                                                            FROM public.users u 
+                                                            JOIN user_role ur ON ur.id = u.id_user_role
+                                                            WHERE u.id = :id");
+
+
+        $stmt->bindParam(":id", $id, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
 

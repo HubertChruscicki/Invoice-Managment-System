@@ -24,8 +24,8 @@
     </div>
 
     <div class="header__user-content">
-        <p class="header__user-content__name">Mateusz Fraudulent</p>
-        <img class="header__user-content__icon" src="data/img/user-icon.png" alt="">
+        <p class="header__user-content__name"></p>
+        <img class="header__user-content__icon" src="data/img/user-icon.png" alt="" onclick="logout()">
     </div>
 
 </header>
@@ -65,7 +65,8 @@
 <!--        loadActiveSection();-->
 <!--    });-->
 <!--</script>-->
-<!--<script src="data/js/MenuRouter.js"></script>-->
+<script src="data/js/MenuRouter.js"></script>
+<script></script>
 
 </body>
 </html>
