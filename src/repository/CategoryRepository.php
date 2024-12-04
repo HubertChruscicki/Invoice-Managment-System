@@ -48,7 +48,12 @@ class CategoryRepository extends Repository
 
     public function getCategoires(int $limit, int $offset)
     {
-        $stmt = $this->database->connect()->prepare("SELECT * FROM public.product_categories LIMIT :limit OFFSET :offset");
+        $stmt = $this->database->connect()->prepare("
+            SELECT pc.id, pc.name, pc.vat, COUNT(p.id) AS ammountProducts
+            FROM public.product_categories pc LEFT JOIN public.products p ON pc.id = p.id_category
+            GROUP BY pc.id, pc.name, pc.vat
+            ORDER BY pc.name
+            LIMIT :limit OFFSET :offset;");
         $stmt->bindParam(":limit", $limit, PDO::PARAM_INT);
         $stmt->bindParam(":offset", $offset, PDO::PARAM_INT);
         $stmt->execute();

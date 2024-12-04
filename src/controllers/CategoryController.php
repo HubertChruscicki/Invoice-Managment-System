@@ -11,10 +11,11 @@ class CategoryController extends AppController
         if (!$this->isGet()) {
             return $this->render('main');
         }
-//        $limit = $_GET['limit'] ?? 10;
-//        $offset = $_GET['offset'] ?? 0;
-        $limit = 3;
-        $offset = 2;
+
+        error_log('GET parameters: ' . print_r($_GET, true));
+
+        $limit = $_GET['limit'] ?? 10;
+        $offset = $_GET['offset'] ?? 0;
 
         $categoryRepository = CategoryRepository::getInstance();
         $categories=$categoryRepository->getCategoires((int)$limit, (int)$offset);

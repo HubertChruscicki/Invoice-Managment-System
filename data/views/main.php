@@ -60,13 +60,8 @@
     <div class="layout__main-content"></div>
 </div>
 
-<!--<script>-->
-<!--    document.addEventListener('DOMContentLoaded', () => {-->
-<!--        loadActiveSection();-->
-<!--    });-->
-<!--</script>-->
+
 <script src="data/js/MenuRouter.js"></script>
-<script></script>
 
 </body>
 </html>

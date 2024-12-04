@@ -64,3 +64,5 @@
     </div>
 </div>
 
+<script src="data/js/Categories.js"></script>
+

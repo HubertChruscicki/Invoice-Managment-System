@@ -9,10 +9,10 @@
             <tr>
                 <th class="main-content__table-header-cell">Product Name</th>
                 <th class="main-content__table-header-cell">Category</th>
-                <th class="main-content__table-header-cell">Price Netto</th>
+                <th class="main-content__table-header-cell">Price Brutto</th>
                 <th class="main-content__table-header-cell">VAT</th>
                 <th class="main-content__table-header-cell">VAT Value</th>
-                <th class="main-content__table-header-cell">Price Brutto</th>
+                <th class="main-content__table-header-cell">Price Netto</th>
                 <th class="main-content__table-header-cell">Actions</th>
             </tr>
             </thead>

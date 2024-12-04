@@ -8,20 +8,33 @@ function loadSectionContent(sectionName, menuItem = null) {
         .then(html => {
             mainContent.innerHTML = html;
             if (menuItem) setActive(menuItem);
+
+
+
+            if (sectionName === "Categories") {
+                const script = document.createElement('script');
+                script.src = 'data/js/Categories.js';
+                script.onload = () => {
+                    // Wykonanie instrukcji po załadowaniu skryptu
+                    loadCategories(20,0); // Wywołanie funkcji z Categories.js
+                };
+                document.body.appendChild(script);
+            }
+
+
+
         })
         .catch(error => {
             console.error(`Error: `, error);
             mainContent.innerHTML = `<p class="error">Error loading content. Please try again later.</p>`;
         });
 }
-
 function switchMainContent(clickedItem) {
     const contentName = clickedItem.getAttribute('data-menu-bar');
 
     localStorage.setItem('activeSection', contentName);
     loadSectionContent(contentName, clickedItem);
 }
-
 function loadActiveSection() {
     const activeSection = localStorage.getItem('activeSection') || 'dashboard';
     console.log(activeSection);
@@ -32,7 +45,6 @@ function loadActiveSection() {
     }
     loadSectionContent(activeSection, menuItem);
 }
-
 function setActive(item) {
     const menuItems = document.querySelectorAll('.layout__sidebar-menu--item');
     menuItems.forEach(el => el.classList.remove('active'));
@@ -42,9 +54,6 @@ function setActive(item) {
 function logout() {
     window.location.href = "logout";
 }
-
-
-
 
 function findUserInfo() {
     var endpoint = "findUserInfo";
@@ -79,7 +88,6 @@ function findUserInfo() {
         });
 }
 
-
 function setFullNameOnHeader() {
     findUserInfo().then(user => {
         if (user) {
@@ -101,72 +109,5 @@ function setFullNameOnHeader() {
 
 setFullNameOnHeader();
 
+
 document.addEventListener('DOMContentLoaded', loadActiveSection);
-//zmiana url
-
-function getCategories(){
-    var endpoint = "getCategories";
-    return fetch(endpoint, {
-        method: 'GET',
-        credentials: 'include'
-    })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then((data) => {
-            console.log(data);
-            if (data.message === "success" && data.categories) {
-                return data.categories
-            } else {
-                throw new Error('Categories not found');
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            alert('Something went wrong witch geting categories!');
-            return null;
-        });
-}
-
-function renderCell(categories)
-{
-    const tbody = document.querySelector('.main-content__table-body');
-    tbody.innerHTML='';
-
-    categories.forEach(category =>{
-        const row = document.createElement('tr');
-        // row.classList.add('main-content__table-row')
-        row.innerHTML = `
-            <td class="main-content__table-cell">${category.name}</td>
-            <td class="main-content__table-cell">${category.vat}%</td>
-            <td class="main-content__table-cell">0</td> 
-            <td class="main-content__table-cell">
-                <button class="main-content__action-button main-content__action-button--edit">Edit</button>
-                <button class="main-content__action-button main-content__action-button--delete">Delete</button>
-            </td>
-        `;
-        tbody.appendChild(row)
-    })
-}
-
-function loadCategories(){
-    getCategories()
-        .then(categoires => {
-            if(categoires){
-                renderCell(categoires);
-            }
-            else{
-                throw new Error('' +
-                    'Categories load error');
-            }
-        })
-        .catch(error => {
-            console.error('Error loading categories:', error);
-        })
-}
-
-
-document.addEventListener('DOMContentLoaded', loadCategories);
