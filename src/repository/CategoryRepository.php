@@ -20,12 +20,22 @@ class CategoryRepository extends Repository
         return self::$instance;
     }
 
-    public function howManyCategories(): int
+    public function howManyCategories(string $namePrefix = null): int
     {
-        $stmt=$this->database->connect()->prepare("SELECT count(*) FROM product_categories");
+        $baseStmt = "SELECT count(*) FROM product_categories";
+
+        if($namePrefix !== null){
+            $baseStmt .= " WHERE LOWER(name) ~ :namePrefix";
+        }
+        $stmt = $this->database->connect()->prepare($baseStmt);
+        if($namePrefix !== null){
+            $prefixRegex = '^' . $namePrefix;
+            $stmt->bindParam(":namePrefix", $prefixRegex, PDO::PARAM_STR);
+        }
         $stmt->execute();
-        $vile = $stmt->fetchColumn();
-        return (int)$vile;
+
+        $count = $stmt->fetchColumn();
+        return (int)$count;
     }
     public function getCategory(string $category_name): ?Category
     {
@@ -46,20 +56,34 @@ class CategoryRepository extends Repository
         );
     }
 
-    public function getCategoires(int $limit, int $offset)
+    public function getCategoires(int $limit, int $offset, string $namePrefix = null): array
     {
-        $stmt = $this->database->connect()->prepare("
+
+        $baseStmt = "
             SELECT pc.id, pc.name, pc.vat, COUNT(p.id) AS ammountProducts
-            FROM public.product_categories pc LEFT JOIN public.products p ON pc.id = p.id_category
-            GROUP BY pc.id, pc.name, pc.vat
-            ORDER BY pc.name
-            LIMIT :limit OFFSET :offset;");
+            FROM public.product_categories pc LEFT JOIN public.products p ON pc.id = p.id_category";
+
+        if($namePrefix !== null){
+            $baseStmt .= " WHERE LOWER(pc.name) ~ :namePrefix";
+        }
+
+        $baseStmt .= " GROUP BY pc.id, pc.name, pc.vat
+                       ORDER BY pc.name
+                       LIMIT :limit OFFSET :offset";
+
+        $stmt = $this->database->connect()->prepare($baseStmt);
+
+        if($namePrefix !== null){
+            $prefixRegex = '^' . $namePrefix;
+            $stmt->bindParam(":namePrefix", $prefixRegex, PDO::PARAM_STR);
+        }
         $stmt->bindParam(":limit", $limit, PDO::PARAM_INT);
         $stmt->bindParam(":offset", $offset, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
 
     public function addCategory(string $category_name, float $vat): void

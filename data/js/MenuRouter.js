@@ -9,15 +9,14 @@ function loadSectionContent(sectionName, menuItem = null) {
             mainContent.innerHTML = html;
             if (menuItem) setActive(menuItem);
 
-
-
             if (sectionName === "Categories") {
                 const script = document.createElement('script');
                 script.src = 'data/js/Categories.js';
                 script.onload = () => {
-                    // Wykonanie instrukcji po załadowaniu skryptu
-                    loadCategories(20,0); // Wywołanie funkcji z Categories.js
+
+                    loadCategories(20,0, ''); // Wywołanie funkcji z Categories.js
                 };
+
                 document.body.appendChild(script);
             }
 

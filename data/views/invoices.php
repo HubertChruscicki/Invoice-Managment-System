@@ -13,27 +13,6 @@
             </tr>
             </thead>
             <tbody class="main-content__table-body">
-            <!--            --><?php
-            //            $data = [
-            //                ["BlachuMucharitoSPZOO kutas w zoo jebal mu stara", "1111111111", "Mucharza Fudali", "Mucharz", "69-420", "Poland"],
-            //
-            //            ];
-            //
-            //            foreach ($data as $item) {
-            //                echo "<tr class='main-content__table-row'>
-            //                                        <td class='main-content__table-cell'>{$item[0]}</td>
-            //                                        <td class='main-content__table-cell'>{$item[1]}</td>
-            //                                        <td class='main-content__table-cell'>{$item[2]}</td>
-            //                                        <td class='main-content__table-cell'>{$item[3]}</td>
-            //                                        <td class='main-content__table-cell'>{$item[4]}</td>
-            //                                        <td class='main-content__table-cell'>{$item[5]}</td>
-            //                                        <td class='main-content__table-cell'>
-            //                                            <button class='main-content__action-button main-content__action-button--edit'>Edit</button>
-            //                                            <button class='main-content__action-button main-content__action-button--delete'>Delete</button>
-            //                                        </td>
-            //                                    </tr>";
-            //            }
-            //            ?>
             </tbody>
         </table>
     </div>
