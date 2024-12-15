@@ -1,7 +1,7 @@
 <?php
 
 require_once 'Repository.php';
-require_once __DIR__.'/../models/User.php';
+require_once __DIR__.'/../models/Category.php';
 
 class CategoryRepository extends Repository
 {
@@ -39,7 +39,7 @@ class CategoryRepository extends Repository
     }
     public function getCategory(string $category_name): ?Category
     {
-        $stmt = $this->database->connect()->prepare("SELECT * FROM public.product_categories WHERE name = :name");
+        $stmt = $this->database->connect()->prepare("SELECT * FROM public.product_categories WHERE name = :name and is_deleted = false");
         $stmt->bindParam(":name", $category_name, PDO::PARAM_STR);
         $stmt->execute();
 
@@ -96,5 +96,10 @@ class CategoryRepository extends Repository
             $category_name,
             $vat
         ]);
+    }
+
+    public function removeCategory(string $category_name): void
+    {
+
     }
 }

@@ -270,6 +270,10 @@ padding-left: 30px;
     align-items: center;
 }
 
+.modal-visible {
+    display: flex; /* Modal widoczny, gdy ta klasa jest dodana */
+}
+
 /* Modal Content */
 .modal-content {
     display: flex;
@@ -288,7 +292,7 @@ padding-left: 30px;
     padding: 20px;
 }
 
-.add-cateogry{
+.add-cateogry, .edit-category{
     width: 100%;
     display: flex;
     align-items: center;
@@ -296,6 +300,7 @@ padding-left: 30px;
 }
 
 .modal-content__info{
+    display: none;
     height: 70px;
     font-size: 1.3em;
     width: 80%;
@@ -303,7 +308,6 @@ padding-left: 30px;
     color: white;
     border-radius: 5px;
     margin-bottom: 2px;
-    display: flex;
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
@@ -352,6 +356,15 @@ padding-left: 30px;
     border-radius: 5px;
     margin-top: 4px;
     margin-bottom: 20px;
+
+}
+
+.modal-content__form-section-delete-button{
+    background-color: rgb(255, 77, 77);
+}
+
+.modal-content__form-section-info{
+    font-weight: unset;
 
 }
 

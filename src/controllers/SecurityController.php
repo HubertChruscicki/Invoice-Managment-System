@@ -79,7 +79,6 @@ class SecurityController extends AppController
 
         $comapny = $companyRepository->doesCompanyExist($company_name,  $nip, $address, $city);
         if($comapny){
-            echo "sigma";
             $this->render('register', ['messages' => ['Company details belong to other one!']]);
             return;
         }

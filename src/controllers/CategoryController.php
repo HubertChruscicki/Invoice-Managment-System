@@ -4,43 +4,37 @@ require_once 'AppController.php';
 require_once __DIR__.'/../repository/CategoryRepository.php';
 class CategoryController extends AppController
 {
-//TODO JAK W REGISTER TAK ADD ITEMU
-//TODO LADOWANIE ITEMOW
 
-    public function addCategory(){
+    public function addCategory(){ //TODO NAPRAWIC KOMUNIKATY
 
-        if (!$this->isGet()) {
+        if (!$this->isPost()) {
             return $this->render('main');
         }
 
-        $cateogry_name = $_GET['categoryName'];
-        $vat_value = $_GET['vatValue'];
+        $category_name = $_POST['categoryName'];
+        $vat_value = $_POST['vatValue'];
 
-        $categoryRepository = CategoryRepository::getInstance();
-        $category=$categoryRepository->addCategory($cateogry_name, $vat_value);
-
-        if ($cateogry_name === '' || $vat_value === '') {
+        if ($category_name === '' || $vat_value === '') {
             $this->render('main', ['messages' => ['You have to fill all fields!']]);
             return;
         }
         if ((int)$vat_value < 0) {
-            $this->render('register', ['messages' => ['Vat cannot be negative']]);
+            $this->render('main', ['messages' => ['Vat cannot be negative']]);
             return;
         }
-        if ((int)$vat_value === 0) {
-            $this->render('register', ['messages' => ['Vat cannot be 0']]);
+        if ((float)$vat_value === 0.0) {
+            $this->render('main', ['messages' => ['Vat cannot be 0']]);
             return;
         }
-        $categoryRepository = CompanyRepository::getInstance();
 
-        $category = $categoryRepository->getCategory($cateogry_name);
+        $categoryRepository = CategoryRepository::getInstance();
+        $category=$categoryRepository->getCategory($category_name);
 
         if($category){
             $this->render('main', ['messages' => ['Category with such name exist!']]);
             return;
         }
-
-        $categoryRepository->addCategory($cateogry_name, $vat_value);
+        $categoryRepository->addCategory($category_name, $vat_value);
 
         return $this->render('main', ['messages' => ['Category successfully added!']]);
     }
