@@ -14,6 +14,7 @@ Router::get('findUserInfo', 'UserInfoController');
 
 Router::get('getCategories', 'CategoryController');
 Router::get('howManyCategories', 'CategoryController');
+Router::get('deleteCategory', 'CategoryController');
 Router::get('addCategory', 'CategoryController');
 
 

@@ -25,7 +25,10 @@ class CategoryRepository extends Repository
         $baseStmt = "SELECT count(*) FROM product_categories";
 
         if($namePrefix !== null){
-            $baseStmt .= " WHERE LOWER(name) ~ :namePrefix";
+            $baseStmt .= " WHERE LOWER(name) ~ :namePrefix AND is_deleted = false;";
+        }
+        else{
+            $baseStmt .= " WHERE is_deleted = false;";
         }
         $stmt = $this->database->connect()->prepare($baseStmt);
         if($namePrefix !== null){
@@ -61,12 +64,14 @@ class CategoryRepository extends Repository
 
         $baseStmt = "
             SELECT pc.id, pc.name, pc.vat, COUNT(p.id) AS ammountProducts
-            FROM public.product_categories pc LEFT JOIN public.products p ON pc.id = p.id_category";
+            FROM public.product_categories pc LEFT JOIN public.products p ON pc.id = p.id_category AND p.is_deleted = false";
 
         if($namePrefix !== null){
-            $baseStmt .= " WHERE LOWER(pc.name) ~ :namePrefix";
+            $baseStmt .= " WHERE LOWER(pc.name) ~ :namePrefix AND pc.is_deleted = false";
         }
-
+        else{
+            $baseStmt .= " WHERE pc.is_deleted = false";
+        }
         $baseStmt .= " GROUP BY pc.id, pc.name, pc.vat
                        ORDER BY pc.name
                        LIMIT :limit OFFSET :offset";
@@ -98,8 +103,29 @@ class CategoryRepository extends Repository
         ]);
     }
 
-    public function removeCategory(string $category_name): void
+    public function deleteCategory(string $category_name): bool
     {
+        $baseStmt = "
+        WITH updated_category AS (
+            UPDATE public.product_categories 
+            SET is_deleted = true 
+            WHERE LOWER(name) = :category_name AND is_deleted = false
+            RETURNING id
+        )
+        UPDATE public.products
+        SET is_deleted = true 
+        FROM updated_category
+        WHERE products.id_category = updated_category.id;";
 
+        $stmt = $this->database->connect()->prepare($baseStmt);
+
+        $stmt->bindParam(":category_name", $category_name, PDO::PARAM_STR);
+        try {
+            $stmt->execute();
+            return true;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
     }
 }

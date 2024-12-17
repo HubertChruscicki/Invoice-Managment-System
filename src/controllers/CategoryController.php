@@ -1,11 +1,13 @@
 <?php
 
 require_once 'AppController.php';
-require_once __DIR__.'/../repository/CategoryRepository.php';
+require_once __DIR__ . '/../repository/CategoryRepository.php';
+
 class CategoryController extends AppController
 {
 
-    public function addCategory(){ //TODO NAPRAWIC KOMUNIKATY
+    public function addCategory()
+    { //TODO NAPRAWIC KOMUNIKATY
 
         if (!$this->isPost()) {
             return $this->render('main');
@@ -28,9 +30,9 @@ class CategoryController extends AppController
         }
 
         $categoryRepository = CategoryRepository::getInstance();
-        $category=$categoryRepository->getCategory($category_name);
+        $category = $categoryRepository->getCategory($category_name);
 
-        if($category){
+        if ($category) {
             $this->render('main', ['messages' => ['Category with such name exist!']]);
             return;
         }
@@ -52,12 +54,11 @@ class CategoryController extends AppController
         $namePrefix = $_GET['namePrefix'] ?? null;
 
         $categoryRepository = CategoryRepository::getInstance();
-        $categories=$categoryRepository->getCategoires((int)$limit, (int)$offset, $namePrefix);
+        $categories = $categoryRepository->getCategoires((int)$limit, (int)$offset, $namePrefix);
 
-        if(empty($categories)){
+        if (empty($categories)) {
             echo json_encode(["message" => "fail"]);
-        }
-        else {
+        } else {
             echo json_encode(["message" => "success", "categories" => $categories]);
         }
 
@@ -81,4 +82,26 @@ class CategoryController extends AppController
         }
     }
 
+    public function deleteCategory()
+    {
+        if (!$this->isPost()) {
+            return $this->render('main');
+        }
+
+        $categoryName = json_decode(file_get_contents('php://input'), true)['categoryName'] ?? null;
+
+
+        if ($categoryName) {
+            $categoryRepository = CategoryRepository::getInstance();
+            $deleteSuccess = $categoryRepository->deleteCategory($categoryName);
+            if ($deleteSuccess) {
+                echo json_encode(["message" => "success"]);
+            } else {
+                echo json_encode(["message" => "fail", "error" => "cant delete category"]);
+            }
+        } else {
+            echo json_encode(["message" => "fail", "error" => "Category name problem"]);
+        }
+
+    }
 }

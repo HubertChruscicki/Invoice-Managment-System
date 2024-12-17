@@ -1,3 +1,5 @@
+var currentOffset = 0;
+
 function getCategories(limit = 10, offset = 0, namePrefix = ''){
     namePrefix = namePrefix.toLowerCase();
     var endpoint = `getCategories?limit=${limit}&offset=${offset}&namePrefix=${namePrefix}`;
@@ -75,6 +77,7 @@ function renderCell(categories)
     })
 }
 function loadCategories(limit = 10, offset = 0, namePrefix = ''){
+    currentOffset = offset;
     namePrefix=namePrefix.toLowerCase();
     getCategories(limit, offset, namePrefix)
         .then(categoires => {
@@ -230,8 +233,57 @@ function closeAddCategoryModal() {
     modal.style.display = 'none';
     document.body.classList.remove('modal-open');
 }
+function openDeleteModal(name){ //TODO BIDA NIE DZIALA HEJ
+    const modal = document.getElementById('deleteCategoryModal');
+    const deleteBttn = document.querySelector('.modal-content__form-section-delete-button');
+    modal.style.display = 'flex';
+    document.body.classList.add('modal-open');
 
+    deleteBttn.addEventListener('click', (event)=>{
+        categoryName = name.toLowerCase();
+        const request = JSON.stringify({categoryName: name.toLowerCase()});
+        fetch('deleteCategory', {
+            method: 'POST',
+            body: request,
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((response)=>{
+                if(!response.ok){
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data)=>{
 
+                if(data.message === "success"){
+                    modal.style.display = 'none';
+                    document.body.classList.remove('modal-open');
+                    loadCategories(20, currentOffset);
+                }
+                else{
+                    throw new Error("Error during deleting category")
+                }
+            })
+            .catch((error) =>{
+                console.error(error);
+                alert("Something went wrong witch deleting category")
+            });
+    })
+
+}
+function closeDeleteCategoryModal() {
+    const modal = document.getElementById('deleteCategoryModal');
+    const modalInfo = document.querySelector('.modal-content__info');
+    modalInfo.textContent = "";
+    modalInfo.style.display = "none"
+    modal.style.display = 'none';
+    document.body.classList.remove('modal-open');
+}
+
+searchCategoryByPrefix();
 
 //TODO KURWA NIE DA SIE ZMIENIC PLACEHOLDERA NIE DZIALA WGL DOPISAC TO DO KONCA
 function openEditCategoryModal(category, vat) {
@@ -283,8 +335,6 @@ function openEditCategoryModal(category, vat) {
     });
 
 }
-
-
 function closeEditCategoryModal() {
     const modal = document.getElementById('editCategoryModal');
     const modalInfo = document.querySelector('.modal-content__info');
@@ -294,21 +344,4 @@ function closeEditCategoryModal() {
     document.body.classList.remove('modal-open');
 }
 
-function openDeleteModal(name){
-    const modal = document.getElementById('deleteCategoryModal');
-    modal.style.display = 'flex';
-    document.body.classList.add('modal-open');
-
-    //perform delte
-}
-
-function closeDeleteCategoryModal() {
-    const modal = document.getElementById('deleteCategoryModal');
-    const modalInfo = document.querySelector('.modal-content__info');
-    modalInfo.textContent = "";
-    modalInfo.style.display = "none"
-    modal.style.display = 'none';
-    document.body.classList.remove('modal-open');
-}
-
-searchCategoryByPrefix();
+//TODO EDIT BARDZO CIEZKI DO ZREALIZOWANIA
