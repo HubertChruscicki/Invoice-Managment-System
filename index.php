@@ -17,6 +17,12 @@ Router::get('howManyCategories', 'CategoryController');
 Router::get('deleteCategory', 'CategoryController');
 Router::get('addCategory', 'CategoryController');
 
+Router::get('getClients', 'ClientsController');
+Router::get('howManyClients', 'ClientsController');
+Router::get('deleteClient', 'ClientsController');
+Router::get('addClient', 'ClientsController');
+Router::get('getSessionId', 'ClientsController');
+
 
 Router::post('login', 'SecurityController');
 Router::get('logout', 'SecurityController');

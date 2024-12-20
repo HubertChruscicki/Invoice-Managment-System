@@ -9,12 +9,22 @@ function loadSectionContent(sectionName, menuItem = null) {
             mainContent.innerHTML = html;
             if (menuItem) setActive(menuItem);
 
-            if (sectionName === "Categories") {
+            if (sectionName === "Categories") { //todo polepszyc
                 const script = document.createElement('script');
                 script.src = 'data/js/Categories.js';
                 script.onload = () => {
 
                     loadCategories(20,0, ''); // Wywołanie funkcji z Categories.js
+                };
+
+                document.body.appendChild(script);
+            }
+            if (sectionName === "Clients") {
+                const script = document.createElement('script');
+                script.src = 'data/js/Clients.js';
+                script.onload = () => {
+
+                    loadClients(20,0, ''); // Wywołanie funkcji z Categories.js
                 };
 
                 document.body.appendChild(script);

@@ -44,6 +44,7 @@ class CategoryController extends AppController
 
     public function getCategories()
     {
+
         if (!$this->isGet()) {
             return $this->render('main');
         }
@@ -66,6 +67,7 @@ class CategoryController extends AppController
 
     public function howManyCategories()
     {
+
         if (!$this->isGet()) {
             return $this->render('main');
         }
@@ -84,6 +86,8 @@ class CategoryController extends AppController
 
     public function deleteCategory()
     {
+
+
         if (!$this->isPost()) {
             return $this->render('main');
         }

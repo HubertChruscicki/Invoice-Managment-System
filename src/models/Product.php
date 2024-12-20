@@ -8,6 +8,7 @@ class Product{
     private $price_brutto;
     private $price_netto;
 
+    //TODO przejrzec wszystkie modele i pomyslec nad dodaniem is_deleted
     public function __construct(int $id, int $id_category, int $id_company, string $name, float $price_brutto, float $price_netto)
     {
         $this->id = $id;

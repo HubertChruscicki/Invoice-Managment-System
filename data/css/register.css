@@ -170,7 +170,7 @@ body{
         width: 90%;
     }
 
-    .container__register-section--select {
+    .container__register-section--select { //TODO border box i zadziala
         width: 96%;
     }
 

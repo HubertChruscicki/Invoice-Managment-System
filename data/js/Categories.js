@@ -101,7 +101,7 @@ function loadCategories(limit = 10, offset = 0, namePrefix = ''){
             console.error('Error loading categories:', error);
         })
 }
-function createPaginationControls(totalPages, currentPage, limit, namePrefix = '') {
+function createPaginationControls(totalPages, currentPage, limit, namePrefix = '') { //todo przepisac na jedna funkcje
     namePrefix = namePrefix.toLowerCase();
     const paginationContainer = document.querySelector('.main-content__pagination');
     paginationContainer.innerHTML = '';
@@ -251,13 +251,14 @@ function openDeleteModal(name){ //TODO BIDA NIE DZIALA HEJ
             }
         })
             .then((response)=>{
+                console.log(response);
                 if(!response.ok){
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
             .then((data)=>{
-
+                console.log(data);
                 if(data.message === "success"){
                     modal.style.display = 'none';
                     document.body.classList.remove('modal-open');
@@ -283,24 +284,21 @@ function closeDeleteCategoryModal() {
     document.body.classList.remove('modal-open');
 }
 
-searchCategoryByPrefix();
 
 //TODO KURWA NIE DA SIE ZMIENIC PLACEHOLDERA NIE DZIALA WGL DOPISAC TO DO KONCA
 function openEditCategoryModal(category, vat) {
     const modal = document.getElementById('editCategoryModal');
     const form = document.querySelector('.edit-category');
     const modalInfo = document.querySelector('.modal-content__info');
-    const categoryName = document.getElementById('categoryName');
-    const vatValue = document.getElementById('vatValue');
+    const categoryName = document.getElementById('categoryNameEdit');
+    const vatValue = document.getElementById('vatValueEdit');
     const existingCategories = getCategories(1,0, categoryName.value)
 
     modal.style.display = 'flex';
     document.body.classList.add('modal-open');
 
-
-    categoryName.setAttribute('placeholder', category);
-    vatValue.setAttribute('placeholder', vat);
-
+    categoryName.value = category;
+    vatValue.value = vat;
 
 
     form.addEventListener('submit', (event) => {
@@ -342,6 +340,10 @@ function closeEditCategoryModal() {
     modalInfo.style.display = "none"
     modal.style.display = 'none';
     document.body.classList.remove('modal-open');
+
 }
+
+
+searchCategoryByPrefix();
 
 //TODO EDIT BARDZO CIEZKI DO ZREALIZOWANIA

@@ -15,8 +15,7 @@
 
             </tr>
             </thead>
-            <tbody class="main-content__table-body">
-            </tbody>
+            <tbody class="main-content__table-body"></tbody>
         </table>
     </div>
     <div class="main-content__pagination"></div>
@@ -51,8 +50,8 @@
 
             <form class="edit-category" action="editCategory" method="POST">
                 <div class="modal-content__form-section">
-                    <input class="modal-content__form-section-input" id="categoryName" type="text" name="categoryName" placeholder="Category name">
-                    <input class="modal-content__form-section-input" id="vatValue" type="text" name="vatValue" placeholder="VAT (%)">
+                    <input class="modal-content__form-section-input" id="categoryNameEdit" type="text" name="categoryName" placeholder="Category name">
+                    <input class="modal-content__form-section-input" id="vatValueEdit" type="text" name="vatValue" placeholder="VAT (%)">
                     <button class="modal-content__form-section-button" type="submit">Edit Category</button>
                 </div>
             </form>
@@ -65,7 +64,6 @@
 
             <h1 class="modal-content__title">Are you sure</h1>
 
-            <div class="modal-content__info"></div>
                 <div class="modal-content__form-section">
                     <h4 class="modal-content__form-section-info">This will delete all products that belongs to the category</h4>
                     <button class="modal-content__form-section-button modal-content__form-section-delete-button" class="" type="button">Delete</button>
