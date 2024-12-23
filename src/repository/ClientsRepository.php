@@ -135,9 +135,9 @@ class ClientsRepository extends Repository
             if($namePrefix !== null) {
                 $baseStmt .= " AND LOWER(cl.name) ~ :namePrefix ";
             }
-            //    $baseStmt .= " GROUP BY cl.id,cl.name, cl.nip, cl.address, cl.city, cl.zip_code, cl.country, cl.is_deleted
             $baseStmt .= " ORDER BY cl.name
-                           LIMIT :limit offset :offset";
+                           LIMIT :limit 
+                           offset :offset";
             $stmt = $this->database->connect()->prepare($baseStmt);
             if ($namePrefix !== null) {
                 $prefixRegex = '^' . $namePrefix;

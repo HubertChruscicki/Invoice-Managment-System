@@ -15,13 +15,17 @@ Router::get('findUserInfo', 'UserInfoController');
 Router::get('getCategories', 'CategoryController');
 Router::get('howManyCategories', 'CategoryController');
 Router::get('deleteCategory', 'CategoryController');
-Router::get('addCategory', 'CategoryController');
+Router::post('addCategory', 'CategoryController');
 
 Router::get('getClients', 'ClientsController');
 Router::get('howManyClients', 'ClientsController');
 Router::get('deleteClient', 'ClientsController');
-Router::get('addClient', 'ClientsController');
-Router::get('getSessionId', 'ClientsController');
+Router::post('addClient', 'ClientsController');
+
+Router::get('getProducts', 'ProductsController');
+Router::get('howManyProducts', 'ProductsController');
+Router::get('deleteProduct', 'ProductsController');
+Router::post('addProduct', 'ProductsController'); //tu zmieniane wszystkie metdoy na post
 
 
 Router::post('login', 'SecurityController');

@@ -46,7 +46,7 @@ class ClientsController extends AppController
             echo $_SESSION['id'];
         }
         else{
-            echo "sraka";
+            echo "skibidi sigma";
         }
     }
     public function howManyClients()

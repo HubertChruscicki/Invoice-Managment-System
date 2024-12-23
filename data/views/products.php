@@ -1,7 +1,7 @@
 <div class="layout__main-content">
     <div class="main-content__toolbar">
-        <input class="main-content__toolbar-search" type="text" placeholder="Search products..." >
-        <button class="main-content__toolbar-button">Add Product</button>
+        <input class="main-content__toolbar-search" type="text" placeholder="Search for product..." id="productSearchInput" >
+        <button class="main-content__toolbar-button" onclick="openAddProductModal()">Add Product</button>
     </div>
     <div class="main-content__table-container">
         <table class="main-content__table">
@@ -20,13 +20,40 @@
             </tbody>
         </table>
     </div>
-    <div class="main-content__pagination">
-        <button class="main-content__pagination-button main-content__pagination-button--prev">&lt;</button>
-        <button class="main-content__pagination-page" onclick="goToPage(1)">1</button>
-        <button class="main-content__pagination-page main-content__pagination-page--active"">2</button>
-        <button class="main-content__pagination-page">3</button>
-        <button class="main-content__pagination-page">4</button>
-        <button class="main-content__pagination-page">5</button>
-        <button class="main-content__pagination-button main-content__pagination-button--next">&gt;</button>
+    <div class="main-content__pagination"></div>
+
+    <div class="modal" id="addProductModal">
+        <div class="modal-content">
+            <button class="modal-content__close-button" onclick="closeAddProductModal()">&times;</button>
+
+            <h1 class="modal-content__title">Add client</h1>
+
+            <div class="modal-content__info"></div>
+
+
+            <form class="add-product" action="addProduct" method="POST">
+                <div class="modal-content__form-section">
+                    <input class="modal-content__form-section-input" id="productName" type="text" name="productName" placeholder="Product name">
+                    <select class="modal-content__form-section-input modal-content__form-section-select" id="productCategory" name="Category">
+                        <option value="Consoles">Consoles</option>
+                        <option value="Computer peripherals">Computer peripherals</option>
+                    </select>
+                    <input class="modal-content__form-section-input" id="priceBrutto" type="text" name="city" placeholder="Price brutto">
+                    <button class="modal-content__form-section-button" type="submit">Add Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="deleteProductModal">
+        <div class="modal-content">
+            <button class="modal-content__close-button" onclick="closeDeleteProductModal()">&times;</button>
+            <h1 class="modal-content__title">Are you sure?</h1>
+            <div class="modal-content__form-section">
+                <button class="modal-content__form-section-button modal-content__form-section-delete-button" class="" type="button">Delete</button>
+            </div>
+        </div>
     </div>
 </div>
+
+<script src="data/js/Products.js"></script>

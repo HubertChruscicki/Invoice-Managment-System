@@ -59,6 +59,25 @@ class CategoryRepository extends Repository
         );
     }
 
+    public function getCategoryByID(int $ID): ?Category
+    {
+        $stmt = $this->database->connect()->prepare("SELECT * FROM public.product_categories WHERE id = :id"); //and is_deleted = false
+        $stmt->bindParam(":id", $ID, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $category = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($category == false) {
+            return null; //exception TODO
+        }
+
+        return new Category(
+            $category['id'],
+            $category['name'],
+            $category['vat']
+        );
+    }
+
     public function getCategoires(int $limit, int $offset, string $namePrefix = null): array
     {
 

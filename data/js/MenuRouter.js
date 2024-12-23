@@ -30,6 +30,16 @@ function loadSectionContent(sectionName, menuItem = null) {
                 document.body.appendChild(script);
             }
 
+            if (sectionName === "Products") {
+                const script = document.createElement('script');
+                script.src = 'data/js/Products.js';
+                script.onload = () => {
+                    loadProducts(20,0, ''); // Wywołanie funkcji z Categories.js
+                };
+
+                document.body.appendChild(script);
+            }
+
 
 
         })
