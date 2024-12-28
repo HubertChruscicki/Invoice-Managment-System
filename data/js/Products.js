@@ -1,5 +1,6 @@
 var currentOffset = 0;
 
+
 function getProducts(limit = 1, offset = 0, namePrefix = ''){
     namePrefix = namePrefix.toLowerCase();
     var endpoint =  `getProducts?limit=${limit}&offset=${offset}&namePrefix=${namePrefix}`;
@@ -21,7 +22,7 @@ function getProducts(limit = 1, offset = 0, namePrefix = ''){
             }
         })
         .catch((error)=>{
-            console.log(error);
+            console.error(error);
             alert('Something went wrong with geting products!');
             return null;
         });
@@ -187,44 +188,57 @@ function openAddProductModal() {
     document.body.classList.add('modal-open');
 
     form.addEventListener('submit', (event) => {
-        console.log("try to add");
         event.preventDefault();
         const productName = document.getElementById('productName').value;
         const productCategory = document.getElementById('productCategory').value;
         const priceBrutto = document.getElementById('priceBrutto').value;
 
-        const existingProduct = getProducts(1,0, productName)
+        console.log("1");
+        getProducts(1, 0, productName)
+            .then((existingProduct) => {
+                console.log("2");
+                console.log(existingProduct);
 
+                if (existingProduct && existingProduct.length > 0) {
+                    console.log("sigma");
+                    modalInfo.style.display = 'flex';
+                    modalInfo.textContent = "Such product exists!";
+                    return; // Zatrzymujemy dalsze przetwarzanie
+                }
 
-        if (productName === '' || productCategory === '' || priceBrutto === '') {
-            modalInfo.style.display = 'flex';
-            modalInfo.textContent = "You have to fill all fields!";
-            return;
-        }
-        if (existingProduct && existingProduct.length > 0) {
-            modalInfo.style.display = 'flex';
-            modalInfo.textContent = "Such product exists!";
-            return;
-        }
-        if (!Number(priceBrutto)) {
-            modalInfo.style.display = 'flex';
-            modalInfo.textContent = "Vat must be a number!";
-            return;
-        }
-        if (Number(priceBrutto) === 0.0) {
-            modalInfo.style.display = 'flex';
-            modalInfo.textContent = "Vat cannot be 0!";
-            return;
-        }
-        if (Number(priceBrutto) < 0.0) {
-            modalInfo.style.display = 'flex';
-            modalInfo.textContent = "Vat cannot be negative!";
-            return;
-        }
-        form.submit();
+                // Walidacja innych pól
+                if (productName === '' || productCategory === '' || priceBrutto === '') {
+                    modalInfo.style.display = 'flex';
+                    modalInfo.textContent = "You have to fill all fields!";
+                    return;
+                }
+                if (!Number(priceBrutto)) {
+                    modalInfo.style.display = 'flex';
+                    modalInfo.textContent = "Price must be a number!";
+                    return;
+                }
+                if (Number(priceBrutto) === 0.0) {
+                    modalInfo.style.display = 'flex';
+                    modalInfo.textContent = "Price cannot be 0!";
+                    return;
+                }
+                if (Number(priceBrutto) < 0.0) {
+                    modalInfo.style.display = 'flex';
+                    modalInfo.textContent = "Price cannot be negative!";
+                    return;
+                }
+
+                form.submit(); // Jeśli wszystko jest OK, wysyłamy formularz
+            })
+            .catch((error) => {
+                console.error("Error fetching products:", error);
+                modalInfo.style.display = 'flex';
+                modalInfo.textContent = "Error fetching products.";
+            });
     });
-
 }
+
+
 
 function closeAddProductModal() { //TODO PRZERBOIC NA COS CO BEDZIE DZIALAC TYLKO PO PODANIU ADDXLIENTMODAL
     const modal = document.getElementById('addProductModal');
@@ -236,15 +250,16 @@ function closeAddProductModal() { //TODO PRZERBOIC NA COS CO BEDZIE DZIALAC TYLK
 }
 
 function openDeleteModal(name){ //TODO BIDA NIE DZIALA HEJ
-    const modal = document.getElementById('deleteClientModal');
+    const modal = document.getElementById('deleteProductModal');
     const deleteBttn = document.querySelector('.modal-content__form-section-delete-button');
     modal.style.display = 'flex';
     document.body.classList.add('modal-open');
 
     deleteBttn.addEventListener('click', (event)=>{
-        clientName = name.toLowerCase();
-        const request = JSON.stringify({clientName: name.toLowerCase()});
-        fetch('deleteClient', {
+        productName = name.toLowerCase();
+        console.log(productName);
+        const request = JSON.stringify({productName: name.toLowerCase()});
+        fetch('deleteProduct', {
             method: 'POST',
             body: request,
             credentials: 'include',
@@ -253,39 +268,36 @@ function openDeleteModal(name){ //TODO BIDA NIE DZIALA HEJ
             }
         })
             .then((response)=>{
-                console.log(response);
                 if(!response.ok){
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
             .then((data)=>{
-                console.log(data);
                 if(data.message === "success"){
                     modal.style.display = 'none';
                     document.body.classList.remove('modal-open');
-                    loadClients(20, currentOffset);
+                    loadProducts(20, currentOffset);
                 }
                 else{
-                    throw new Error("Error during deleting client")
+                    throw new Error("Error during deleting product")
                 }
             })
             .catch((error) =>{
                 console.error(error);
-                alert("Something went wrong witch deleting client")
+                alert("Something went wrong witch deleting product")
             });
     })
 
 }
 
-function closeDeleteCategoryModal() {
-    const modal = document.getElementById('deleteClientModal');
+function closeDeleteProductModal() {
+    const modal = document.getElementById('deleteProductModal');
     const modalInfo = document.querySelector('.modal-content__info');
     modalInfo.textContent = "";
     modalInfo.style.display = "none"
     modal.style.display = 'none';
     document.body.classList.remove('modal-open');
 }
-
 
 searchProductByPrefix();

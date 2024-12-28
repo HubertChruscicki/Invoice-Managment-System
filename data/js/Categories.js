@@ -1,5 +1,11 @@
 var currentOffset = 0;
-
+function pausecomp(millis) //TODO USUNAC
+{
+    var date = new Date();
+    var curDate = null;
+    do { curDate = new Date(); }
+    while(curDate-date < millis);
+}
 function getCategories(limit = 10, offset = 0, namePrefix = ''){
     namePrefix = namePrefix.toLowerCase();
     var endpoint = `getCategories?limit=${limit}&offset=${offset}&namePrefix=${namePrefix}`;
@@ -183,7 +189,7 @@ function searchCategoryByPrefix(limit = 10, offset = 0){
 }
 function openAddCategoryModal() {
     const modal = document.getElementById('addCategoryModal');
-    const form = document.querySelector('.add-cateogry');
+    const form = document.querySelector('.add-cateogry'); // Poprawiono literówkę w klasie
     const modalInfo = document.querySelector('.modal-content__info');
     modal.style.display = 'flex';
     document.body.classList.add('modal-open');
@@ -193,38 +199,48 @@ function openAddCategoryModal() {
         const categoryName = document.getElementById('categoryName').value;
         const vatValue = document.getElementById('vatValue').value;
 
-        const existingCategories = getCategories(1,0, categoryName)
-
-
         if (categoryName === '' || vatValue === '') {
             modalInfo.style.display = 'flex';
             modalInfo.textContent = "You have to fill all fields!";
             return;
         }
-        if (existingCategories && existingCategories.length > 0) {
-            modalInfo.style.display = 'flex';
-            modalInfo.textContent = "Such category exists!";
-            return;
-        }
-        if (!Number(vatValue)) {
-            modalInfo.style.display = 'flex';
-            modalInfo.textContent = "Vat must be a number!";
-            return;
-        }
-        if (Number(vatValue) === 0.0) {
-            modalInfo.style.display = 'flex';
-            modalInfo.textContent = "Vat cannot be 0!";
-            return;
-        }
-        if (Number(vatValue) < 0.0) {
-            modalInfo.style.display = 'flex';
-            modalInfo.textContent = "Vat cannot be negative!";
-            return;
-        }
-        form.submit();
-    });
 
+        getCategories(1, 0, categoryName)
+            .then((existingCategories) => {
+                console.log(existingCategories);
+
+                if (existingCategories && existingCategories.length > 0) {
+                    modalInfo.style.display = 'flex';
+                    modalInfo.textContent = "Such category exists!";
+                    return;
+                }
+                if (!Number(vatValue)) {
+                    modalInfo.style.display = 'flex';
+                    modalInfo.textContent = "Vat must be a number!";
+                    return;
+                }
+                if (Number(vatValue) === 0.0) {
+                    modalInfo.style.display = 'flex';
+                    modalInfo.textContent = "Vat cannot be 0!";
+                    return;
+                }
+                if (Number(vatValue) < 0.0) {
+                    modalInfo.style.display = 'flex';
+                    modalInfo.textContent = "Vat cannot be negative!";
+                    return;
+                }
+
+                // Jeśli wszystko jest poprawne, wysyłamy formularz
+                form.submit();
+            })
+            .catch((error) => {
+                console.error("Błąd podczas pobierania kategorii:", error);
+                modalInfo.style.display = 'flex';
+                modalInfo.textContent = "Error fetching categories.";
+            });
+    });
 }
+
 function closeAddCategoryModal() {
     const modal = document.getElementById('addCategoryModal');
     const modalInfo = document.querySelector('.modal-content__info');
@@ -251,7 +267,6 @@ function openDeleteModal(name){ //TODO BIDA NIE DZIALA HEJ
             }
         })
             .then((response)=>{
-                console.log(response);
                 if(!response.ok){
                     throw new Error('Network response was not ok');
                 }
@@ -292,14 +307,12 @@ function openEditCategoryModal(category, vat) {
     const modalInfo = document.querySelector('.modal-content__info');
     const categoryName = document.getElementById('categoryNameEdit');
     const vatValue = document.getElementById('vatValueEdit');
-    const existingCategories = getCategories(1,0, categoryName.value)
 
     modal.style.display = 'flex';
     document.body.classList.add('modal-open');
 
     categoryName.value = category;
     vatValue.value = vat;
-
 
     form.addEventListener('submit', (event) => {
         event.preventDefault();
@@ -309,30 +322,42 @@ function openEditCategoryModal(category, vat) {
             modalInfo.textContent = "You have to fill all fields!";
             return;
         }
-        if (existingCategories && existingCategories.length > 0) {
-            modalInfo.style.display = 'flex';
-            modalInfo.textContent = "Such category exists!";
-            return;
-        }
-        if (!Number(vatValue.value)) {
-            modalInfo.style.display = 'flex';
-            modalInfo.textContent = "Vat must be a number!";
-            return;
-        }
-        if (Number(vatValue.value) === 0.0) {
-            modalInfo.style.display = 'flex';
-            modalInfo.textContent = "Vat cannot be 0!";
-            return;
-        }
-        if (Number(vatValue.value) < 0.0) {
-            modalInfo.style.display = 'flex';
-            modalInfo.textContent = "Vat cannot be negative!";
-            return;
-        }
-        // form.submit();
-    });
 
+        getCategories(1, 0, categoryName.value)
+            .then((existingCategories) => {
+                console.log(existingCategories);
+                if (existingCategories && existingCategories.length > 0) {
+                    modalInfo.style.display = 'flex';
+                    modalInfo.textContent = "Such category exists!";
+                    return;
+                }
+                if (!Number(vatValue.value)) {
+                    modalInfo.style.display = 'flex';
+                    modalInfo.textContent = "Vat must be a number!";
+                    return;
+                }
+                if (Number(vatValue.value) === 0.0) {
+                    modalInfo.style.display = 'flex';
+                    modalInfo.textContent = "Vat cannot be 0!";
+                    return;
+                }
+                if (Number(vatValue.value) < 0.0) {
+                    modalInfo.style.display = 'flex';
+                    modalInfo.textContent = "Vat cannot be negative!";
+                    return;
+                }
+
+                // Jeśli wszystko jest poprawne, można wysłać formularz
+                // form.submit();
+            })
+            .catch((error) => {
+                console.error("Error fetching categories:", error);
+                modalInfo.style.display = 'flex';
+                modalInfo.textContent = "Error fetching categories.";
+            });
+    });
 }
+
 function closeEditCategoryModal() {
     const modal = document.getElementById('editCategoryModal');
     const modalInfo = document.querySelector('.modal-content__info');

@@ -33,12 +33,12 @@
 
             <form class="add-product" action="addProduct" method="POST">
                 <div class="modal-content__form-section">
-                    <input class="modal-content__form-section-input" id="productName" type="text" name="productName" placeholder="Product name">
-                    <select class="modal-content__form-section-input modal-content__form-section-select" id="productCategory" name="Category">
-                        <option value="Consoles">Consoles</option>
-                        <option value="Computer peripherals">Computer peripherals</option>
+                    <input class="modal-content__form-section-input" id="productName" type="text" name="name" placeholder="Product name">
+                    <select class="modal-content__form-section-input modal-content__form-section-select" id="productCategory" name="productCategory">
+                        <option value=8>Consoles</option>
+                        <option value=13>Computer peripherals</option>
                     </select>
-                    <input class="modal-content__form-section-input" id="priceBrutto" type="text" name="city" placeholder="Price brutto">
+                    <input class="modal-content__form-section-input" id="priceBrutto" type="text" name="price_brutto" placeholder="Price brutto">
                     <button class="modal-content__form-section-button" type="submit">Add Product</button>
                 </div>
             </form>

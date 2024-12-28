@@ -194,22 +194,29 @@ function openAddClientModal() {
         const city = document.getElementById('city').value;
         const country = document.getElementById('country').value;
 
-        const existingClients = getClients(1,0, clientName)
-
-
         if (clientName === '' || nip === '' || address === '' || city === '' || country === '') {
             modalInfo.style.display = 'flex';
             modalInfo.textContent = "You have to fill all fields!";
             return;
         }
-        if (existingClients && existingClients.length > 0) {
-            modalInfo.style.display = 'flex';
-            modalInfo.textContent = "Such client exists!";
-            return;
-        }
-        form.submit();
-    });
 
+        getClients(1, 0, clientName)
+            .then((existingClients) => {
+                if (existingClients && existingClients.length > 0) {
+                    modalInfo.style.display = 'flex';
+                    modalInfo.textContent = "Such client exists!";
+                    return;
+                }
+
+                // Jeśli klient nie istnieje, wysyłamy formularz
+                form.submit();
+            })
+            .catch((error) => {
+                console.error("Error fetching clients:", error);
+                modalInfo.style.display = 'flex';
+                modalInfo.textContent = "Error fetching clients.";
+            });
+    });
 }
 
 function closeAddClientModal() { //TODO PRZERBOIC NA COS CO BEDZIE DZIALAC TYLKO PO PODANIU ADDXLIENTMODAL
