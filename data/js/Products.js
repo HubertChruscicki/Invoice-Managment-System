@@ -1,9 +1,9 @@
 var currentOffset = 0;
 
 
-function getProducts(limit = 1, offset = 0, namePrefix = ''){
+function getProducts(limit = 1, offset = 0, namePrefix = '', searchByCategoryFlag = false){
     namePrefix = namePrefix.toLowerCase();
-    var endpoint =  `getProducts?limit=${limit}&offset=${offset}&namePrefix=${namePrefix}`;
+    var endpoint =  `getProducts?limit=${limit}&offset=${offset}&namePrefix=${namePrefix}&searchByCategoryFlag=${searchByCategoryFlag}`;
     return fetch(endpoint, {
         method: 'GET',
         credentials: 'include'
@@ -82,10 +82,10 @@ function renderCell(products)
     })
 }
 
-function loadProducts(limit = 10, offset = 0, namePrefix = ''){
+function loadProducts(limit = 10, offset = 0, namePrefix = '', searchByCategoryFlag = false){
     currentOffset = offset;
     namePrefix=namePrefix.toLowerCase();
-    getProducts(limit, offset, namePrefix)
+    getProducts(limit, offset, namePrefix, searchByCategoryFlag)
         .then(products => {
             if(products){
                 renderCell(products);
@@ -172,11 +172,15 @@ function createPaginationControls(totalPages, currentPage, limit, namePrefix = '
         paginationContainer.appendChild(nextButton);
     }
 }
-function searchProductByPrefix(limit = 10, offset = 0){
-    document.getElementById('productSearchInput').addEventListener('input', (event)=>{
-        const input = event.target.value;
-        loadProducts(limit, offset, input);
-    })
+function searchProductByPrefix(input, limit = 10, offset = 0){
+    const searchByOption = document.getElementById('searchMethod');
+    if(searchByOption.value === 'client_name'){
+        searchByCategoryFlag = false;
+    }
+    else{
+        searchByCategoryFlag = true;
+    }
+        loadProducts(limit, offset, input, searchByCategoryFlag);
 }
 
 
@@ -299,7 +303,6 @@ function closeDeleteProductModal() {
     document.body.classList.remove('modal-open');
 }
 
-searchProductByPrefix();
 
 
 

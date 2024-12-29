@@ -1,6 +1,10 @@
 <div class="layout__main-content">
     <div class="main-content__toolbar">
-        <input class="main-content__toolbar-search" type="text" placeholder="Search for client..." id="clientSearchInput" >
+        <select class="main-content__toolbar-select" id="searchMethod" name="searchMethod">
+            <option value=client_name>Client name</option>
+            <option value=nip>NIP</option>
+        </select>
+        <input class="main-content__toolbar-search" type="text" placeholder="Search for client..." id="clientSearchInput" oninput="searchClientByPrefix(this.value)">
         <button class="main-content__toolbar-button" onclick="openAddClientModal()">Add Client</button>
     </div>
     <div class="main-content__table-container">

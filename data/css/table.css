@@ -7,6 +7,12 @@
     gap: 10px;
 }
 
+.main-content__toolbar-select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 20%;
+}
 .main-content__toolbar-search {
     padding: 10px;
     border: 1px solid #ccc;

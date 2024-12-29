@@ -88,9 +88,10 @@ class ClientsController extends AppController
         $limit = $_GET['limit'] ?? 10;
         $offset = $_GET['offset'] ?? 0;
         $namePrefix = $_GET['namePrefix'] ?? null;
+        $searchByNipFlag = filter_var($_GET['searchByNipFlag'] ?? 'false', FILTER_VALIDATE_BOOLEAN);
 
         $clientRepository = ClientsRepository::getInstance();
-        $clients = $clientRepository->getClients((int)$user_id, (int)$limit, (int)$offset, $namePrefix);
+        $clients = $clientRepository->getClients((int)$user_id, (int)$limit, (int)$offset, $namePrefix, $searchByNipFlag);
 
         if (empty($clients)) {
             echo json_encode(["message" => "fail"]);

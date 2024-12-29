@@ -124,7 +124,7 @@ class ClientsRepository extends Repository
         }
     }
 
-    public function getClients(int $user_id, int $limit, int $offset, string $namePrefix = null)
+    public function getClients(int $user_id, int $limit, int $offset, string $namePrefix = null, $searchByNipFlag)
     {
         try{
             $baseStmt = "select cl.id,cl.name, cl.nip, cl.address, cl.city, cl.zip_code, cl.country, cl.is_deleted from clients cl
@@ -133,7 +133,13 @@ class ClientsRepository extends Repository
                   join users u on u.id_company = c.id
                   where is_deleted = false and u.id = :user_id";
             if($namePrefix !== null) {
-                $baseStmt .= " AND LOWER(cl.name) ~ :namePrefix ";
+                if($searchByNipFlag === true){
+                    $baseStmt .= " AND LOWER(cl.nip) ~ :namePrefix ";
+                }
+                else{
+                    $baseStmt .= " AND LOWER(cl.name) ~ :namePrefix ";
+                }
+
             }
             $baseStmt .= " ORDER BY cl.name
                            LIMIT :limit 

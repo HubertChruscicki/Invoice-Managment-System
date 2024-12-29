@@ -40,6 +40,16 @@ function loadSectionContent(sectionName, menuItem = null) {
                 document.body.appendChild(script);
             }
 
+            if (sectionName === "Invoices") {
+                const script = document.createElement('script');
+                script.src = 'data/js/Invoices.js';
+                script.onload = () => {
+                    loadInvoices(20,0, ''); // Wywołanie funkcji z Categories.js
+                };
+
+                document.body.appendChild(script);
+            }
+
 
 
         })
@@ -127,6 +137,7 @@ function setFullNameOnHeader() {
 }
 
 setFullNameOnHeader();
+
 
 
 document.addEventListener('DOMContentLoaded', loadActiveSection);

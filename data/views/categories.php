@@ -1,6 +1,6 @@
 <div class="layout__main-content">
     <div class="main-content__toolbar">
-        <input class="main-content__toolbar-search" type="text" placeholder="Search for category..." id="categorySearchInput">
+        <input class="main-content__toolbar-search" type="text" placeholder="Search for category..." id="categorySearchInput" oninput="searchCategoryByPrefix(this.value)">
         <button class="main-content__toolbar-button" onclick="openAddCategoryModal()">Add Category</button>
 
     </div>

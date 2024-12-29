@@ -230,11 +230,8 @@ function createPaginationControls(totalPages, currentPage, limit, namePrefix = '
         paginationContainer.appendChild(nextButton);
     }
 }
-function searchCategoryByPrefix(limit = 10, offset = 0){
-    document.getElementById('categorySearchInput').addEventListener('input', (event)=>{
-            const input = event.target.value;
+function searchCategoryByPrefix(input, limit = 10, offset = 0){
             loadCategories(limit, offset, input);
-    })
 }
 function openAddCategoryModal() {
     const modal = document.getElementById('addCategoryModal');
@@ -418,6 +415,6 @@ function closeEditCategoryModal() {
 }
 
 
-searchCategoryByPrefix();
+
 //TODO EDIT BARDZO CIEZKI DO ZREALIZOWANIA
 console.log("loaded cat");

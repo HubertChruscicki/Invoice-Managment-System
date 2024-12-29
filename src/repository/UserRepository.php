@@ -94,7 +94,7 @@ class UserRepository extends Repository
         try {
         $this->addUser($companyId, $adminRoleId, $email, $pass, $company_name.'@admin', $company_name.'@admin');
         } catch (Exception $e) {
-        throw new Exception("Amin user adding error: " . $e->getMessage());
+        throw new Exception("Admin user adding error: " . $e->getMessage());
         }
     }
 

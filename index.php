@@ -28,6 +28,12 @@ Router::get('deleteProduct', 'ProductsController');
 Router::post('addProduct', 'ProductsController'); //tu zmieniane wszystkie metdoy na post
 
 
+Router::get('getInvoices', 'InvoicesController');
+Router::get('howManyInvoices', 'InvoicesController');
+Router::get('deleteInvoice', 'InvoicesController');
+Router::post('addInvoice', 'InvoicesController'); //tu zmieniane wszystkie metdoy na post
+
+
 Router::post('login', 'SecurityController');
 Router::get('logout', 'SecurityController');
 Router::post('register', 'SecurityController'); //todo zmienione na post sprawdzic

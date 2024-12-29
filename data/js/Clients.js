@@ -1,8 +1,8 @@
 var currentOffset = 0;
 
-function getClients(limit = 1, offset = 0, namePrefix = ''){
+function getClients(limit = 1, offset = 0, namePrefix = '', searchByNipFlag= false){
     namePrefix = namePrefix.toLowerCase();
-    var endpoint =  `getClients?limit=${limit}&offset=${offset}&namePrefix=${namePrefix}`;
+    var endpoint =  `getClients?limit=${limit}&offset=${offset}&namePrefix=${namePrefix}&searchByNipFlag=${searchByNipFlag}`;
     return fetch(endpoint, {
         method: 'GET',
         credentials: 'include'
@@ -82,10 +82,10 @@ function renderCell(clients)
     })
 }
 
-function loadClients(limit = 10, offset = 0, namePrefix = ''){
+function loadClients(limit = 10, offset = 0, namePrefix = '', searchByNipFlag=false){
     currentOffset = offset;
     namePrefix=namePrefix.toLowerCase();
-    getClients(limit, offset, namePrefix)
+    getClients(limit, offset, namePrefix, searchByNipFlag)
         .then(clients => {
             if(clients){
                 renderCell(clients);
@@ -172,11 +172,15 @@ function createPaginationControls(totalPages, currentPage, limit, namePrefix = '
         paginationContainer.appendChild(nextButton);
     }
 }
-function searchClientByPrefix(limit = 10, offset = 0){
-    document.getElementById('clientSearchInput').addEventListener('input', (event)=>{
-        const input = event.target.value;
-        loadClients(limit, offset, input);
-    })
+function searchClientByPrefix(input, limit = 10, offset = 0){
+    const searchByOption = document.getElementById('searchMethod');
+    if(searchByOption.value === 'client_name'){
+        searchByNipFlag = false;
+    }
+    else{
+        searchByNipFlag = true;
+    }
+    loadClients(limit, offset, input, searchByNipFlag);
 }
 
 function openAddClientModal() {
@@ -282,4 +286,4 @@ function closeDeleteCategoryModal() {
 
 
 
-searchClientByPrefix();
+

@@ -6,6 +6,7 @@ require_once 'src/controllers/UserInfoController.php';
 require_once 'src/controllers/CategoryController.php';
 require_once 'src/controllers/ClientsController.php';
 require_once 'src/controllers/ProductsController.php';
+require_once 'src/controllers/InvoicesController.php';
 
 class Router{
     

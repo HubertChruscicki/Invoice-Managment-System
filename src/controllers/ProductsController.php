@@ -102,8 +102,9 @@ class ProductsController extends AppController
         $limit = $_GET['limit'] ?? 10;
         $offset = $_GET['offset'] ?? 0;
         $namePrefix = $_GET['namePrefix'] ?? null;
+        $searchByCategoryFlag = filter_var($_GET['searchByCategoryFlag'] ?? 'false', FILTER_VALIDATE_BOOLEAN);
         $productRepository = ProductsRepository::getInstance();
-        $products = $productRepository->getProducts((int)$user_id, (int)$limit, (int)$offset, $namePrefix);
+        $products = $productRepository->getProducts((int)$user_id, (int)$limit, (int)$offset, $namePrefix, $searchByCategoryFlag);
 
         if (empty($products)) {
             echo json_encode(["message" => "fail"]);

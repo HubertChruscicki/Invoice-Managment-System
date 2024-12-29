@@ -97,7 +97,7 @@ class ProductsRepository extends Repository
             $stmt = $this->database->connect()->prepare($baseStmt);
             $stmt->bindParam('user_id', $user_id, PDO::PARAM_INT);
             if($namePrefix !== null){
-                $prefixRegex = '^'.$namePrefix.'$';
+                $prefixRegex = '^'.$namePrefix;
                 $stmt->bindParam(':namePrefix', $prefixRegex, PDO::PARAM_STR);
             }
             $stmt->execute();
@@ -111,7 +111,7 @@ class ProductsRepository extends Repository
     }
 
 
-    public function getProducts(int $user_id, int $limit, int $offset, string $namePrefix=null)
+    public function getProducts(int $user_id, int $limit, int $offset, string $namePrefix=null, bool $searchByCategoryFlag = false)
     {
         try {
             $baseStmt =
@@ -122,7 +122,12 @@ class ProductsRepository extends Repository
             where p.is_deleted = false and u.id = :user_id"
             ;
             if($namePrefix !== null) {
-                $baseStmt .= " AND LOWER(p.name) ~ :namePrefix ";
+                if($searchByCategoryFlag === true){
+                    $baseStmt .= " AND LOWER(pc.name) ~ :namePrefix ";
+                }
+                else{
+                    $baseStmt .= " AND LOWER(p.name) ~ :namePrefix ";
+                }
             }
             $baseStmt .= " ORDER BY p.name
                            LIMIT :limit 

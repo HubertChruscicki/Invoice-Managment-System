@@ -1,6 +1,10 @@
 <div class="layout__main-content">
     <div class="main-content__toolbar">
-        <input class="main-content__toolbar-search" type="text" placeholder="Search for product..." id="productSearchInput" >
+        <select class="main-content__toolbar-select" id="searchMethod" name="searchMethod">
+            <option value=client_name>Product name</option>
+            <option value=category_name>Cateogry name</option>
+        </select>
+        <input class="main-content__toolbar-search" type="text" placeholder="Search for product..." id="productSearchInput" oninput="searchProductByPrefix(this.value)">
         <button class="main-content__toolbar-button" onclick="openAddProductModal()">Add Product</button>
     </div>
     <div class="main-content__table-container">

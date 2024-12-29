@@ -61,10 +61,11 @@
 </div>
 
 
-<script src="data/js/MenuRouter.js"></script>
 <script src="data/js/Categories.js"></script>
 <script src="data/js/Products.js"></script>
 <script src="data/js/Clients.js"></script>
+<script src="data/js/Invoices.js"></script>
+<script src="data/js/MenuRouter.js"></script>
 </body>
 </html>
 
