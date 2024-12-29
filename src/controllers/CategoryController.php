@@ -58,7 +58,8 @@ class CategoryController extends AppController
         $categories = $categoryRepository->getCategoires((int)$limit, (int)$offset, $namePrefix);
 
         if (empty($categories)) {
-            echo json_encode(["message" => "fail"]);
+            echo json_encode(["message" => "success", "categories" => []]); //TODO ZMIENIC FAIL OBSLUGE
+//            echo json_encode(["message" => "fail"]);
         } else {
             echo json_encode(["message" => "success", "categories" => $categories]);
         }

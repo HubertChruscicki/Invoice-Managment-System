@@ -1,5 +1,8 @@
 <div class="layout__main-content">
-    <h2>tu zrobic filter by date client itp</h2>
+    <div class="main-content__toolbar">
+        <input class="main-content__toolbar-search" type="text" placeholder="Search for invocie by company name..." id="invoiceSearchInput" >
+        <button class="main-content__toolbar-button" onclick="openAddInvoiceModal()">Add Invoice</button>
+    </div>
     <div class="main-content__table-container">
         <table class="main-content__table">
             <thead class="main-content__table-header">

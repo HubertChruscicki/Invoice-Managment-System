@@ -190,13 +190,11 @@ function openAddProductModal() {
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         const productName = document.getElementById('productName').value;
-        const productCategory = document.getElementById('productCategory').value;
+        const productCategory = document.getElementById('category-input-id').value;
         const priceBrutto = document.getElementById('priceBrutto').value;
 
-        console.log("1");
         getProducts(1, 0, productName)
             .then((existingProduct) => {
-                console.log("2");
                 console.log(existingProduct);
 
                 if (existingProduct && existingProduct.length > 0) {
@@ -212,6 +210,7 @@ function openAddProductModal() {
                     modalInfo.textContent = "You have to fill all fields!";
                     return;
                 }
+
                 if (!Number(priceBrutto)) {
                     modalInfo.style.display = 'flex';
                     modalInfo.textContent = "Price must be a number!";
@@ -301,3 +300,13 @@ function closeDeleteProductModal() {
 }
 
 searchProductByPrefix();
+
+
+
+
+// document.getElementById('category-input').addEventListener('input', (event) => {
+//     const searchTerm = event.target.value;
+//     console.log(searchTerm);
+// });
+
+console.log("loaded prod");

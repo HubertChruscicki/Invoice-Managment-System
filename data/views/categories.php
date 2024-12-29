@@ -72,4 +72,4 @@
     </div>
 </div>
 
-<script src="data/js/Categories.js"></script>
+<!--<script src="data/js/Categories.js"></script>-->

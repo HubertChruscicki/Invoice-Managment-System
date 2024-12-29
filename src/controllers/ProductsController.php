@@ -19,7 +19,7 @@ class ProductsController extends AppController
             return;
         }
         $user_id = $_SESSION['id'];
-        $id_category = (int)$_POST['productCategory']; //category by name
+        $id_category = (int)$_POST['productCategoryID']; //category by name
         $name = $_POST['name'];
         $price_brutto = (float)$_POST['price_brutto'];
         $price_netto = null;

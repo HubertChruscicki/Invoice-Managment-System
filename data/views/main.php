@@ -62,7 +62,9 @@
 
 
 <script src="data/js/MenuRouter.js"></script>
-
+<script src="data/js/Categories.js"></script>
+<script src="data/js/Products.js"></script>
+<script src="data/js/Clients.js"></script>
 </body>
 </html>
 

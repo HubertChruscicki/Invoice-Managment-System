@@ -59,6 +59,55 @@ function howManyCategories(namePrefix = ''){
             return null;
         });
 }
+                                                                    //TODO POMYSLEC CO ZROBIC JAK SIE DODA COS BO WYEDY ZYL ALERT PO ODJECIU DODAJE OSTATNIE WYBRANE
+function updateCategoryList(namePrefix = ''){ //TODO POPRACOWAC NAD LADOWANIEM TEGO BO NEI DZIALA JAK POWINNO SIGMA
+    namePrefix = namePrefix.toLowerCase();
+    // var endpoint = `getCategories?namePrefixlimit=${limit}&${namePrefix}`;
+    var endpoint = `getCategories?limit=${128}&namePrefix=${namePrefix}`;
+    return fetch(endpoint, {
+        method: 'GET',
+        credentials: 'include'
+    })
+        .then((response) => {
+            console.log(response);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log(data)
+            if (data.message === "success" ) {
+                const categoryListElement = document.getElementById('category-list');
+                categoryListElement.innerHTML = '';
+                data.categories.forEach(category=>{
+                    const listItem = document.createElement('li');  // Tworzymy nowy element <li>
+                    listItem.textContent = category.name;
+                    categoryListElement.appendChild(listItem);
+
+                    listItem.addEventListener('click', ()=>{
+                        const categoryInput = document.getElementById('category-input');
+                        const categoryInputID = document.getElementById('category-input-id');
+                        categoryInput.value = category.name;
+                        categoryInputID.value = category.id;
+                        console.log(`Category selected: ${category.name}, ID: ${category.id}`);
+                        categoryListElement.innerHTML = '';
+                    })
+                })
+
+                // return data
+            } else {
+                throw new Error('Fail');
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+            // alert('Something went wrong witch geting list of cateogires!');
+            console.log("ni mo takiej");
+            return null;
+        });
+}
+
 function renderCell(categories)
 {
     const tbody = document.querySelector('.main-content__table-body');
@@ -370,5 +419,5 @@ function closeEditCategoryModal() {
 
 
 searchCategoryByPrefix();
-
 //TODO EDIT BARDZO CIEZKI DO ZREALIZOWANIA
+console.log("loaded cat");
