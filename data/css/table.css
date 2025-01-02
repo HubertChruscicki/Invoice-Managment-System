@@ -103,7 +103,7 @@
     background-color: #cc0000;
 }
 
-.main-content__pagination {
+.main-content__pagination, .main-content__pagination-2, .main-content__pagination-3{
     width: 80%;
     display: flex;
     justify-content: center;

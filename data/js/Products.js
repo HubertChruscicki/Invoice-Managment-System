@@ -57,10 +57,21 @@ function howManyProducts(namePrefix = ''){
 }
 
 
-function renderCell(products)
+function renderProductCell(products, path = null)
 {
-    const tbody = document.querySelector('.main-content__table-body');
+    let tbody;
+
+    if(path!==null)
+    {
+        tbody = document.querySelector(`.${path}`);
+    }
+    else
+    {
+        tbody = document.querySelector('.main-content__table-body');
+    }
+
     tbody.innerHTML='';
+
     if(products.length === 0){
         return;
     }
@@ -72,28 +83,42 @@ function renderCell(products)
             <td class="main-content__table-cell">${product.price_brutto}</td>
             <td class="main-content__table-cell">${product.vat}%</td>
             <td class="main-content__table-cell">${product.vat_value}</td>
-            <td class="main-content__table-cell">${product.price_netto}</td>
-            <td class="main-content__table-cell">                       
-                <button class="main-content__action-button main-content__action-button--edit" onclick="openEditProductModal('${product.name}','${product.nip}','${product.address}','${product.city}','${product.zip_code}' ,'${product.country}')">Edit</button>
-                <button class="main-content__action-button main-content__action-button--delete" onclick="openDeleteModal('${product.name}')">Delete</button>
-            </td>
-        `;
-        tbody.appendChild(row)
-    })
+            <td class="main-content__table-cell">${product.price_netto}</td>`;
+
+            if(path!==null)
+            {
+                row.innerHTML += `
+                    <td class="main-content__table-cell">
+                        <button class="main-content__action-button main-content__action-button--edit" onclick="addProductToInvoice('${product.id}','${product.id_category}','${product.id_company}','${product.name}','${product.price_brutto}','${product.price_netto}')">+</button>
+                    </td>
+                `;
+
+            }
+            else
+            {
+                row.innerHTML += `
+                    <td class="main-content__table-cell">
+                        <button class="main-content__action-button main-content__action-button--delete" onclick="openDeleteModal('${product.name}')">Delete</button>
+                    </td>            
+                `;
+            }
+
+        tbody.appendChild(row);
+    });
 }
 
-function loadProducts(limit = 10, offset = 0, namePrefix = '', searchByCategoryFlag = false){
+function loadProducts(limit = 10, offset = 0, namePrefix = '', searchByCategoryFlag = false, path = null){
     currentOffset = offset;
     namePrefix=namePrefix.toLowerCase();
     getProducts(limit, offset, namePrefix, searchByCategoryFlag)
         .then(products => {
             if(products){
-                renderCell(products);
+                renderProductCell(products, path);
                 howManyProducts(namePrefix)
                     .then(ammountProducts => {
                         const totalPages = Math.ceil(ammountProducts/ limit);
                         const currentPage = Math.floor(offset/limit) + 1;
-                        createPaginationControls(totalPages, currentPage, limit, namePrefix)
+                        createProductPaginationControls(totalPages, currentPage, limit, namePrefix, path)
                     }).catch(error => {
                     console.log('Error fetching ammount of products: ', error);
                 })
@@ -108,9 +133,19 @@ function loadProducts(limit = 10, offset = 0, namePrefix = '', searchByCategoryF
         })
 }
 
-function createPaginationControls(totalPages, currentPage, limit, namePrefix = '') { //todo przepisac na jedna funkcje
+function createProductPaginationControls(totalPages, currentPage, limit, namePrefix = '', path=null) { //todo przepisac na jedna funkcje
     namePrefix = namePrefix.toLowerCase();
-    const paginationContainer = document.querySelector('.main-content__pagination');
+
+    let paginationContainer;
+    if(path!==null)
+    {
+        paginationContainer = document.querySelector('.main-content__pagination-3');
+    }
+    else
+    {
+        paginationContainer = document.querySelector('.main-content__pagination');
+    }
+
     paginationContainer.innerHTML = '';
 
     if (totalPages > 1) {
@@ -118,7 +153,7 @@ function createPaginationControls(totalPages, currentPage, limit, namePrefix = '
         prevButton.textContent = '<';
         prevButton.classList.add('main-content__pagination-button');
         if (currentPage > 1) {
-            prevButton.onclick = () => loadProducts(limit, (currentPage - 2) * limit, namePrefix);
+            prevButton.onclick = () => loadProducts(limit, (currentPage - 2) * limit, namePrefix, false, path);
         } else {
             prevButton.disabled = true;
         }
@@ -134,7 +169,7 @@ function createPaginationControls(totalPages, currentPage, limit, namePrefix = '
             if (currentPage === 1) {
                 firstPageButton.classList.add('main-content__pagination-page--active');
             }
-            firstPageButton.onclick = () => loadProducts(limit, 0, namePrefix);
+            firstPageButton.onclick = () => loadProducts(limit, 0, namePrefix, false, path);
             paginationContainer.appendChild(firstPageButton);
         }
 
@@ -145,7 +180,7 @@ function createPaginationControls(totalPages, currentPage, limit, namePrefix = '
             if (i === currentPage) {
                 pageButton.classList.add('main-content__pagination-page--active');
             }
-            pageButton.onclick = () => loadProducts(limit, (i - 1) * limit, namePrefix);
+            pageButton.onclick = () => loadProducts(limit, (i - 1) * limit, namePrefix, false, path);
             paginationContainer.appendChild(pageButton);
         }
 
@@ -156,7 +191,7 @@ function createPaginationControls(totalPages, currentPage, limit, namePrefix = '
             if (currentPage === totalPages) {
                 lastPageButton.classList.add('main-content__pagination-page--active');
             }
-            lastPageButton.onclick = () => loadProducts(limit, (totalPages - 1) * limit, namePrefix);
+            lastPageButton.onclick = () => loadProducts(limit, (totalPages - 1) * limit, namePrefix, false, path);
             paginationContainer.appendChild(lastPageButton);
         }
 
@@ -165,22 +200,28 @@ function createPaginationControls(totalPages, currentPage, limit, namePrefix = '
         nextButton.classList.add('main-content__pagination-button');
         if (currentPage < totalPages) {
             // Dodano przekazanie namePrefix do loadCategories w nextButton
-            nextButton.onclick = () => loadProducts(limit, currentPage * limit, namePrefix);
+            nextButton.onclick = () => loadProducts(limit, currentPage * limit, namePrefix, false, path);
         } else {
             nextButton.disabled = true;
         }
         paginationContainer.appendChild(nextButton);
     }
 }
-function searchProductByPrefix(input, limit = 10, offset = 0){
-    const searchByOption = document.getElementById('searchMethod');
-    if(searchByOption.value === 'client_name'){
+function searchProductByPrefix(input, path=null, limit = 10, offset = 0){
+    let searchByOption;
+    if(path!==null){
+        searchByOption = document.getElementById('searchMethod-3');
+    }
+    else{
+        searchByOption = document.getElementById('searchMethod');
+    }
+    if(searchByOption.value === 'product_name'){
         searchByCategoryFlag = false;
     }
     else{
         searchByCategoryFlag = true;
     }
-        loadProducts(limit, offset, input, searchByCategoryFlag);
+        loadProducts(limit, offset, input, searchByCategoryFlag, path);
 }
 
 

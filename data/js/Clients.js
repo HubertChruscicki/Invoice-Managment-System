@@ -55,45 +55,69 @@ function howManyClients(namePrefix = ''){
         });
 }
 
-function renderCell(clients)
+function renderClientCell(clients, path=null)
 {
-    const tbody = document.querySelector('.main-content__table-body');
+    let tbody;
+    if(path!==null)
+    {
+         tbody = document.querySelector(`.${path}`);
+    }
+    else
+    {
+     tbody = document.querySelector('.main-content__table-body');
+    }
     tbody.innerHTML='';
 
     if(clients.length === 0){
         return;
     }
-
     clients.forEach(client =>{
-        const row = document.createElement('tr');
+         const row = document.createElement('tr');
         row.innerHTML = `
             <td class="main-content__table-cell">${client.name}</td>
             <td class="main-content__table-cell">${client.nip}</td>
             <td class="main-content__table-cell">${client.address}</td>
             <td class="main-content__table-cell">${client.city}</td>
             <td class="main-content__table-cell">${client.zip_code}</td>
-            <td class="main-content__table-cell">${client.country}</td>
-            <td class="main-content__table-cell">
-                <button class="main-content__action-button main-content__action-button--edit" onclick="openEditClientModal('${client.name}','${client.nip}','${client.address}','${client.city}','${client.zip_code}' ,'${client.country}')">Edit</button>
-                <button class="main-content__action-button main-content__action-button--delete" onclick="openDeleteModal('${client.name}')">Delete</button>
-            </td>
-        `;
-        tbody.appendChild(row)
+            <td class="main-content__table-cell">${client.country}</td>`;
+
+        if(path!==null)
+        {
+            row.innerHTML += `
+                <td class="main-content__table-cell">
+                    <button class="main-content__action-button main-content__action-button--edit" onclick="assignClientToInvoice('${client.id}','${client.name}','${client.nip}','${client.address}','${client.city}','${client.zip_code}','${client.country}')">Select</button>
+                </td>
+            `;
+
+        }
+        else
+        {
+            row.innerHTML += `
+                <td class="main-content__table-cell">
+                    <button class="main-content__action-button main-content__action-button--edit" onclick="openEditClientModal()">Edit</button>
+                    <button class="main-content__action-button main-content__action-button--delete" onclick="openDeleteModal('${client.name}')">Delete</button>
+                </td>            
+            `;
+        }
+
+        tbody.appendChild(row);
     })
+
+
 }
 
-function loadClients(limit = 10, offset = 0, namePrefix = '', searchByNipFlag=false){
+function loadClients(limit = 10, offset = 0, namePrefix = '', searchByNipFlag = false, path = null) {
     currentOffset = offset;
-    namePrefix=namePrefix.toLowerCase();
+    namePrefix = namePrefix.toLowerCase();
     getClients(limit, offset, namePrefix, searchByNipFlag)
         .then(clients => {
-            if(clients){
-                renderCell(clients);
+            if (clients) {
+                renderClientCell(clients, path);
                 howManyClients(namePrefix)
                     .then(ammountClients => {
                         const totalPages = Math.ceil(ammountClients/ limit);
                         const currentPage = Math.floor(offset/limit) + 1;
-                        createPaginationControls(totalPages, currentPage, limit, namePrefix)
+                        createClientPaginationControls(totalPages, currentPage, limit, namePrefix, path)
                     }).catch(error => {
                     console.log('Error fetching ammount of clients: ', error);
                 })
@@ -108,9 +132,18 @@ function loadClients(limit = 10, offset = 0, namePrefix = '', searchByNipFlag=fa
         })
 }
 
-function createPaginationControls(totalPages, currentPage, limit, namePrefix = '') { //todo przepisac na jedna funkcje
+function createClientPaginationControls(totalPages, currentPage, limit, namePrefix = '', path=null) { //todo przepisac na jedna funkcje
     namePrefix = namePrefix.toLowerCase();
-    const paginationContainer = document.querySelector('.main-content__pagination');
+    let paginationContainer;
+    if(path!==null)
+    {
+        paginationContainer = document.querySelector('.main-content__pagination-2');
+    }
+    else
+    {
+        paginationContainer = document.querySelector('.main-content__pagination');
+    }
+    // const paginationContainer = document.querySelector('.main-content__pagination');
     paginationContainer.innerHTML = '';
 
     if (totalPages > 1) {
@@ -118,7 +151,7 @@ function createPaginationControls(totalPages, currentPage, limit, namePrefix = '
         prevButton.textContent = '<';
         prevButton.classList.add('main-content__pagination-button');
         if (currentPage > 1) {
-            prevButton.onclick = () => loadClients(limit, (currentPage - 2) * limit, namePrefix);
+            prevButton.onclick = () => loadClients(limit, (currentPage - 2) * limit, namePrefix, false, path); //TODO FALSE NIE MOZE BYC BO WYSZUKIWANIE WYMAGA SPRAWDZENIA
         } else {
             prevButton.disabled = true;
         }
@@ -134,7 +167,7 @@ function createPaginationControls(totalPages, currentPage, limit, namePrefix = '
             if (currentPage === 1) {
                 firstPageButton.classList.add('main-content__pagination-page--active');
             }
-            firstPageButton.onclick = () => loadClients(limit, 0, namePrefix);
+            firstPageButton.onclick = () => loadClients(limit, 0, namePrefix, false, path);
             paginationContainer.appendChild(firstPageButton);
         }
 
@@ -145,7 +178,7 @@ function createPaginationControls(totalPages, currentPage, limit, namePrefix = '
             if (i === currentPage) {
                 pageButton.classList.add('main-content__pagination-page--active');
             }
-            pageButton.onclick = () => loadClients(limit, (i - 1) * limit, namePrefix);
+            pageButton.onclick = () => loadClients(limit, (i - 1) * limit, namePrefix, false, path);
             paginationContainer.appendChild(pageButton);
         }
 
@@ -156,7 +189,7 @@ function createPaginationControls(totalPages, currentPage, limit, namePrefix = '
             if (currentPage === totalPages) {
                 lastPageButton.classList.add('main-content__pagination-page--active');
             }
-            lastPageButton.onclick = () => loadClients(limit, (totalPages - 1) * limit, namePrefix);
+            lastPageButton.onclick = () => loadClients(limit, (totalPages - 1) * limit, namePrefix, false, path);
             paginationContainer.appendChild(lastPageButton);
         }
 
@@ -165,23 +198,30 @@ function createPaginationControls(totalPages, currentPage, limit, namePrefix = '
         nextButton.classList.add('main-content__pagination-button');
         if (currentPage < totalPages) {
             // Dodano przekazanie namePrefix do loadCategories w nextButton
-            nextButton.onclick = () => loadClients(limit, currentPage * limit, namePrefix);
+            nextButton.onclick = () => loadClients(limit, currentPage * limit, namePrefix, false, path);
         } else {
             nextButton.disabled = true;
         }
         paginationContainer.appendChild(nextButton);
     }
 }
-function searchClientByPrefix(input, limit = 10, offset = 0){
-    const searchByOption = document.getElementById('searchMethod');
+function searchClientByPrefix(input, path=null, limit = 10, offset = 0){
+    let searchByOption;
+     if(path!==null){
+        searchByOption = document.getElementById('searchMethod-2');
+     }
+     else{
+        searchByOption = document.getElementById('searchMethod');
+     }
     if(searchByOption.value === 'client_name'){
         searchByNipFlag = false;
     }
     else{
         searchByNipFlag = true;
     }
-    loadClients(limit, offset, input, searchByNipFlag);
+    loadClients(limit, offset, input, searchByNipFlag, path);
 }
+
 
 function openAddClientModal() {
     const modal = document.getElementById('addClientModal');
@@ -283,7 +323,6 @@ function closeDeleteCategoryModal() {
     modal.style.display = 'none';
     document.body.classList.remove('modal-open');
 }
-
 
 
 

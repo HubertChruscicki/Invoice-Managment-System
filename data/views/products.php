@@ -1,7 +1,7 @@
 <div class="layout__main-content">
     <div class="main-content__toolbar">
         <select class="main-content__toolbar-select" id="searchMethod" name="searchMethod">
-            <option value=client_name>Product name</option>
+            <option value=product_name>Product name</option>
             <option value=category_name>Cateogry name</option>
         </select>
         <input class="main-content__toolbar-search" type="text" placeholder="Search for product..." id="productSearchInput" oninput="searchProductByPrefix(this.value)">

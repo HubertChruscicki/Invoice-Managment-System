@@ -191,56 +191,43 @@ function openAddInvoiceModal() {
 
     form.addEventListener('submit', (event) => {
         event.preventDefault();
-        const productName = document.getElementById('productName').value;
-        const productCategory = document.getElementById('category-input-id').value;
-        const priceBrutto = document.getElementById('priceBrutto').value;
+                // form.submit(); // Jeśli wszystko jest OK, wysyłamy formularz
 
-        getProducts(1, 0, productName)
-            .then((existingProduct) => {
-                console.log(existingProduct);
-
-                if (existingProduct && existingProduct.length > 0) {
-                    console.log("sigma");
-                    modalInfo.style.display = 'flex';
-                    modalInfo.textContent = "Such product exists!";
-                    return; // Zatrzymujemy dalsze przetwarzanie
-                }
-
-                // Walidacja innych pól
-                if (productName === '' || productCategory === '' || priceBrutto === '') {
-                    modalInfo.style.display = 'flex';
-                    modalInfo.textContent = "You have to fill all fields!";
-                    return;
-                }
-
-                if (!Number(priceBrutto)) {
-                    modalInfo.style.display = 'flex';
-                    modalInfo.textContent = "Price must be a number!";
-                    return;
-                }
-                if (Number(priceBrutto) === 0.0) {
-                    modalInfo.style.display = 'flex';
-                    modalInfo.textContent = "Price cannot be 0!";
-                    return;
-                }
-                if (Number(priceBrutto) < 0.0) {
-                    modalInfo.style.display = 'flex';
-                    modalInfo.textContent = "Price cannot be negative!";
-                    return;
-                }
-
-                form.submit(); // Jeśli wszystko jest OK, wysyłamy formularz
-            })
-            .catch((error) => {
-                console.error("Error fetching products:", error);
-                modalInfo.style.display = 'flex';
-                modalInfo.textContent = "Error fetching products.";
-            });
     });
 }
 
 function closeAddInvoiceModal() { //TODO PRZERBOIC NA COS CO BEDZIE DZIALAC TYLKO PO PODANIU ADDXLIENTMODAL
     const modal = document.getElementById('addInvoiceModal');
+    const modalInfo = document.querySelector('.modal-content__info');
+    const chosenClientTbody = document.getElementById('chosenClient');
+    const clientID = document.getElementById('client-input-id');
+    modalInfo.textContent = "";
+    modalInfo.style.display = "none"
+    modal.style.display = 'none';
+    document.body.classList.remove('modal-open');
+    chosenClientTbody.innerHTML = `            
+            <td class="main-content__table-cell"></td>
+            <td class="main-content__table-cell"></td>
+            <td class="main-content__table-cell"></td>
+            <td class="main-content__table-cell"></td>
+            <td class="main-content__table-cell"></td>
+            <td class="main-content__table-cell"></td>`;
+    clientID.value=null;
+
+}
+
+function openChooseClientModal() {
+    const modal = document.getElementById('chooseClientModal');
+    const modalInfo = document.querySelector('.modal-content__info');
+    modal.style.display = 'flex';
+    document.body.classList.add('modal-open');
+
+    loadClients(20,0, '', false, "main-content__table-body-2");
+
+
+}
+function closeChooseClientModal() {  //TODO REFRESH WYSZUKWIANIE
+    const modal = document.getElementById('chooseClientModal');
     const modalInfo = document.querySelector('.modal-content__info');
     modalInfo.textContent = "";
     modalInfo.style.display = "none"
@@ -248,3 +235,61 @@ function closeAddInvoiceModal() { //TODO PRZERBOIC NA COS CO BEDZIE DZIALAC TYLK
     document.body.classList.remove('modal-open');
 }
 
+function assignClientToInvoice(id, name, nip, address, city, zip_code, country) {
+    const clientID = document.getElementById('client-input-id').value=id;
+    const chosenClientTbody = document.getElementById('chosenClient');
+    chosenClientTbody.innerHTML = `
+            <td class="main-content__table-cell">${name}</td>
+            <td class="main-content__table-cell">${nip}</td>
+            <td class="main-content__table-cell">${address}</td>
+            <td class="main-content__table-cell">${city}</td>
+            <td class="main-content__table-cell">${zip_code}</td>
+            <td class="main-content__table-cell">${country}</td>
+    ` ;
+    closeChooseClientModal();
+
+}
+
+
+function openAddProductToInvoiceModal() {
+    const modal = document.getElementById('addProductToInvoiceModal');
+    const modalInfo = document.querySelector('.modal-content__info');
+    modal.style.display = 'flex';
+    document.body.classList.add('modal-open');
+
+    loadProducts(20,0, '', false, "main-content__table-body-3");
+
+
+}
+function closeAddProductToInvoiceModal() {  //TODO REFRESH WYSZUKWIANIE
+    const modal = document.getElementById('addProductToInvoiceModal');
+    const modalInfo = document.querySelector('.modal-content__info');
+    modalInfo.textContent = "";
+    modalInfo.style.display = "none"
+    modal.style.display = 'none';
+    document.body.classList.remove('modal-open');
+}
+
+function addProductToInvoice(id, name, category_name, price_brutto, vat, price_netto) {
+    // const clientID = document.getElementById('client-input-id').value=id;
+    //TODO STRING Z JSONEM DO BAZY
+    const chosenProductTbody = document.getElementById('chosenProducts');
+
+
+
+    chosenProductTbody.innerHTML += `
+            <td class="main-content__table-cell">${name}</td>
+            <td class="main-content__table-cell">${category_name}</td>
+            <td class="main-content__table-cell">${price_brutto}</td>
+            <td class="main-content__table-cell">${vat}</td>
+            <td class="main-content__table-cell">${price_netto}</td>
+            <td class="main-content__table-cell"><input type="number" min="1"></td>
+            <td class="main-content__table-cell">
+                <button class="main-content__action-button main-content__action-button--delete" onclick="deleteFromInvoice('${id}')">&times</button>
+            </td>
+
+    ` ;
+
+    closeAddProductToInvoiceModal();
+
+}
