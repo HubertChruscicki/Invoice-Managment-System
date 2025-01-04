@@ -1,5 +1,5 @@
 var currentOffset = 0;
-
+var productsList = [];
 function getInvoices(limit = 1, offset = 0, namePrefix = '', searchByNipFlag= false){
     namePrefix = namePrefix.toLowerCase();
     var endpoint =  `getInvoices?limit=${limit}&offset=${offset}&namePrefix=${namePrefix}&searchByNipFlag=${searchByNipFlag}`;
@@ -71,9 +71,8 @@ function renderCell(invoices)
             <td class="main-content__table-cell">${invoice.total_price_brutto}</td>
             <td class="main-content__table-cell">${invoice.invoice_date}</td>
             <td class="main-content__table-cell">                       
-                <button class="main-content__action-button main-content__action-button--edit" onclick="openEditInvoiceModal('${invoice.name}','${invoice.nip}','${invoice.address}','${invoice.city}','${invoice.zip_code}' ,'${invoice.country}')">Edit</button>
+                <button class="main-content__action-button main-content__action-button--edit" onclick="generateInvoice('${invoice.id}')">Generate</button>
                 <button class="main-content__action-button main-content__action-button--delete" onclick="openDeleteModal('${invoice.name}')">Delete</button>
-<!--                TODO zastanowic sie nad deletem-->
             </td>
         `;
         tbody.appendChild(row)
@@ -186,13 +185,25 @@ function openAddInvoiceModal() {
     const modal = document.getElementById('addInvoiceModal');
     const form = document.querySelector('.add-invoice');
     const modalInfo = document.querySelector('.modal-content__info');
+
     modal.style.display = 'flex';
     document.body.classList.add('modal-open');
 
     form.addEventListener('submit', (event) => {
         event.preventDefault();
-                // form.submit(); // Jeśli wszystko jest OK, wysyłamy formularz
+        const clientID = document.getElementById('client-input-id');
+        const productsJSON = document.getElementById('products-json-input');
 
+        if (!clientID.value || productsList.length === 0) {
+            alert("Please select a client and at least one product.");
+            return;
+        }
+
+        productsJSON.value = JSON.stringify(productsList);
+
+        console.log(productsJSON.value);
+        console.log(clientID.value);
+        form.submit();
     });
 }
 
@@ -201,6 +212,7 @@ function closeAddInvoiceModal() { //TODO PRZERBOIC NA COS CO BEDZIE DZIALAC TYLK
     const modalInfo = document.querySelector('.modal-content__info');
     const chosenClientTbody = document.getElementById('chosenClient');
     const clientID = document.getElementById('client-input-id');
+    const productsJSON = document.getElementById('products-json-input');
     modalInfo.textContent = "";
     modalInfo.style.display = "none"
     modal.style.display = 'none';
@@ -213,6 +225,7 @@ function closeAddInvoiceModal() { //TODO PRZERBOIC NA COS CO BEDZIE DZIALAC TYLK
             <td class="main-content__table-cell"></td>
             <td class="main-content__table-cell"></td>`;
     clientID.value=null;
+    productsJSON.value=null;
 
 }
 
@@ -270,26 +283,63 @@ function closeAddProductToInvoiceModal() {  //TODO REFRESH WYSZUKWIANIE
     document.body.classList.remove('modal-open');
 }
 
-function addProductToInvoice(id, name, category_name, price_brutto, vat, price_netto) {
-    // const clientID = document.getElementById('client-input-id').value=id;
-    //TODO STRING Z JSONEM DO BAZY
-    const chosenProductTbody = document.getElementById('chosenProducts');
+function renderProductList(products) {
+    const tbody = document.getElementById("chosenProducts");
+    tbody.innerHTML = '';
 
+    if (products.length === 0) {
+        return;
+    }
 
-
-    chosenProductTbody.innerHTML += `
-            <td class="main-content__table-cell">${name}</td>
-            <td class="main-content__table-cell">${category_name}</td>
-            <td class="main-content__table-cell">${price_brutto}</td>
-            <td class="main-content__table-cell">${vat}</td>
-            <td class="main-content__table-cell">${price_netto}</td>
-            <td class="main-content__table-cell"><input type="number" min="1"></td>
+    products.forEach(product => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="main-content__table-cell">${product.name}</td>
+            <td class="main-content__table-cell">${product.category_name}</td>
+            <td class="main-content__table-cell">${product.price_brutto}</td>
+            <td class="main-content__table-cell">${product.vat}%</td>
+            <td class="main-content__table-cell">${product.vat_value}</td>
+            <td class="main-content__table-cell">${product.price_netto}</td>
+            <td class="main-content__table-cell"><input type="number" min="1" value="${product.quantity}" onchange="updateProductQuantity('${product.id}', this.value)"></td>
             <td class="main-content__table-cell">
-                <button class="main-content__action-button main-content__action-button--delete" onclick="deleteFromInvoice('${id}')">&times</button>
+                <button class="main-content__action-button main-content__action-button--delete" onclick="deleteFromInvoice('${product.id}')">&times;</button>
             </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
 
-    ` ;
+function addProductToInvoice(id, name, category_name, price_brutto, vat, vat_value, price_netto) {
+    const existingProduct = productsList.find(product => product.id === id);
 
+    if (existingProduct) {
+        existingProduct.quantity++;
+    } else {
+        const newProduct = {
+            id,
+            name,
+            category_name,
+            price_brutto,
+            vat,
+            vat_value,
+            price_netto,
+            quantity: 1
+        };
+        productsList.push(newProduct);
+    }
+
+    renderProductList(productsList); // Aktualizacja widoku tabeli
     closeAddProductToInvoiceModal();
+}
 
+function updateProductQuantity(productId, newQuantity) {
+    const product = productsList.find(p => p.id === productId);
+    if (product) {
+        product.quantity = parseInt(newQuantity, 10) || 1; // Zapobiega wartościom nieprawidłowym
+    }
+}
+
+function deleteFromInvoice(productId) {
+    productsList = productsList.filter(product => product.id !== productId);
+    renderProductList(productsList); // Aktualizacja widoku tabeli
 }

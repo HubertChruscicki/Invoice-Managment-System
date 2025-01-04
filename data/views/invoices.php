@@ -5,7 +5,7 @@
             <option value=nip>NIP</option>
         </select>
         <input class="main-content__toolbar-search" type="text" placeholder="Search for invocie by client name..." id="invoiceSearchInput" oninput="searchInvoiceByPrefix(this.value)">
-        <button class="main-content__toolbar-button" onclick="openAddInvoiceModal()">Add Invoice</button>
+        <button class="main-content__toolbar-button" type="button" onclick="openAddInvoiceModal()">Add Invoice</button>
     </div>
     <div class="main-content__table-container">
         <table class="main-content__table">
@@ -27,7 +27,7 @@
 
     <div class="modal" id="addInvoiceModal">
         <div class="modal-content modal-content--invoice">
-            <button class="modal-content__close-button" onclick="closeAddInvoiceModal()">&times;</button>
+            <button class="modal-content__close-button" type="button" onclick="closeAddInvoiceModal()">&times;</button>
 
             <h1 class="modal-content__title">Add invoice</h1>
 
@@ -41,7 +41,7 @@
 
                     <div class="modal-content__form-section-main">
                         <div class="modal-content__form-section-client">
-                            <button class="modal-content__form-section-button modal-content__form-section-button--option" type="" onclick="openChooseClientModal()">Choose client</button>
+                            <button class="modal-content__form-section-button modal-content__form-section-button--option" type="button" onclick="openChooseClientModal()">Choose client</button>
                             <div class="main-content__table-container main-content__table-container--modal">
                                 <table class="main-content__table main-content__table--modal">
                                     <thead class="main-content__table-header main-content__table-header--modal">
@@ -67,7 +67,7 @@
                         </div>
 
                         <div class="modal-content__form-section-right">
-                            <button class="modal-content__form-section-button modal-content__form-section-button--option" type="" onclick="openAddProductToInvoiceModal()">Add product</button>
+                            <button class="modal-content__form-section-button modal-content__form-section-button--option" type="button" onclick="openAddProductToInvoiceModal()">Add product</button>
                             <div class="main-content__table-container main-content__table-container--modal">
 
                                 <table class="main-content__table main-content__table--modal">
@@ -76,13 +76,14 @@
                                         <th class="main-content__table-header-cell main-content__table-header-cell--modal">Product Name</th>
                                         <th class="main-content__table-header-cell main-content__table-header-cell--modal">Category</th>
                                         <th class="main-content__table-header-cell main-content__table-header-cell--modal">Price Brutto</th>
+                                        <th class="main-content__table-header-cell main-content__table-header-cell--modal">VAT</th>
                                         <th class="main-content__table-header-cell main-content__table-header-cell--modal">VAT Value</th>
                                         <th class="main-content__table-header-cell main-content__table-header-cell--modal">Price Netto</th>
                                         <th class="main-content__table-header-cell main-content__table-header-cell--modal">Quantity</th>
                                         <th class="main-content__table-header-cell main-content__table-header-cell--modal">Actions</th>
                                     </tr>
                                     </thead>
-                                    <tbody class="main-content__table-body main-content__table-body--modal" id="chosenProducts">
+                                    <tbody class="main-content__table-body main-content__table-body--modal " id="chosenProducts">
 
                                     <tr>
                                         <td class="main-content__table-cell"></td>
@@ -99,7 +100,7 @@
                         </div>
                     </div>
 
-                    <button class="modal-content__form-section-button " type="submit">Create Invoice</button>
+                    <button class="modal-content__form-section-button modal-content__form-section-button--invoice" type="submit">Create Invoice</button>
                 </div>
             </form>
         </div>
@@ -107,7 +108,7 @@
 
     <div class="modal" id="chooseClientModal">
         <div class="modal-content modal-content--invoice">
-            <button class="modal-content__close-button" onclick="closeChooseClientModal()">&times;</button>
+            <button class="modal-content__close-button" type="button" onclick="closeChooseClientModal()">&times;</button>
             <h1 class="modal-content__title">Choose client</h1>
             <div class="main-content__toolbar">
                 <select class="main-content__toolbar-select" id="searchMethod-2" name="searchMethod">
@@ -134,19 +135,12 @@
 
             </div>
             <div class="main-content__pagination-2"></div>
-
-
-<!--            <div class="choose-company">-->
-<!--                <div class="modal-content__form-section">-->
-<!--                    -->
-<!--                </div>-->
-<!--            </div>-->
         </div>
     </div>
 
     <div class="modal" id="addProductToInvoiceModal">
         <div class="modal-content modal-content--invoice">
-            <button class="modal-content__close-button" onclick="closeAddProductToInvoiceModal()">&times;</button>
+            <button class="modal-content__close-button" type="button" onclick="closeAddProductToInvoiceModal()">&times;</button>
             <h1 class="modal-content__title">Add product</h1>
             <div class="main-content__toolbar">
                 <select class="main-content__toolbar-select" id="searchMethod-3" name="searchMethod">
@@ -173,13 +167,6 @@
 
             </div>
             <div class="main-content__pagination-3"></div>
-
-
-<!--            <div class="choose-company">-->
-<!--                <div class="modal-content__form-section">-->
-<!--                    -->
-<!--                </div>-->
-<!--            </div>-->
         </div>
     </div>
 </div>

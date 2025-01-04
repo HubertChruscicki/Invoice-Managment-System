@@ -89,8 +89,16 @@ function renderProductCell(products, path = null)
             {
                 row.innerHTML += `
                     <td class="main-content__table-cell">
-                        <button class="main-content__action-button main-content__action-button--edit" onclick="addProductToInvoice('${product.id}','${product.id_category}','${product.id_company}','${product.name}','${product.price_brutto}','${product.price_netto}')">+</button>
-                    </td>
+                        <button class="main-content__action-button main-content__action-button--edit" onclick="addProductToInvoice(
+                                '${product.id}', 
+                                '${product.name}', 
+                                '${product.category_name}', 
+                                '${product.price_brutto}', 
+                                 ${product.vat}, 
+                                '${product.vat_value}', 
+                                '${product.price_netto}')">+
+                          </button>                    
+                      </td>
                 `;
 
             }
@@ -132,6 +140,8 @@ function loadProducts(limit = 10, offset = 0, namePrefix = '', searchByCategoryF
             console.error('Error loading products:', error);
         })
 }
+
+
 
 function createProductPaginationControls(totalPages, currentPage, limit, namePrefix = '', path=null) { //todo przepisac na jedna funkcje
     namePrefix = namePrefix.toLowerCase();

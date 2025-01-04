@@ -94,7 +94,6 @@ function renderClientCell(clients, path=null)
         {
             row.innerHTML += `
                 <td class="main-content__table-cell">
-                    <button class="main-content__action-button main-content__action-button--edit" onclick="openEditClientModal()">Edit</button>
                     <button class="main-content__action-button main-content__action-button--delete" onclick="openDeleteModal('${client.name}')">Delete</button>
                 </td>            
             `;

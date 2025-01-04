@@ -447,6 +447,10 @@ padding-left: 30px;
     margin-bottom: 20px;
 
 }
+.modal-content__form-section-button--invoice{
+    width: 95% !important;
+    margin-top: 15px !important;
+}
 
 .modal-content__form-section-button--option{
     height: 35px;

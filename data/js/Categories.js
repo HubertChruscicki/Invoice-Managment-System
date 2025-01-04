@@ -124,7 +124,6 @@ function renderCell(categories)
             <td class="main-content__table-cell">${category.vat}%</td>
             <td class="main-content__table-cell">${category.ammountproducts}</td> 
             <td class="main-content__table-cell">
-                <button class="main-content__action-button main-content__action-button--edit" onclick="openEditCategoryModal('${category.name}', ${category.vat})">Edit</button>
                 <button class="main-content__action-button main-content__action-button--delete" onclick="openDeleteModal('${category.name}')">Delete</button>
             </td>
         `;

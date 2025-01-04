@@ -56,35 +56,7 @@
         </div>
     </div>
 
-    <div class="modal" id="editClientModal">
-        <div class="modal-content">
-            <button class="modal-content__close-button" onclick="closeEditClientModal()">&times;</button>
 
-            <h1 class="modal-content__title">Edit client</h1>
-
-            <div class="modal-content__info"></div>
-
-
-            <form class="edit-category" action="editCategory" method="POST">
-                <div class="modal-content__form-section">
-                    <input class="modal-content__form-section-input" id="categoryNameEdit" type="text" name="clientName" placeholder="Client name">
-                    <input class="modal-content__form-section-input" id="nipEdit" type="text" name="nip" placeholder="NIP">
-                    <input class="modal-content__form-section-input" id="addressEdit" type="text" name="address" placeholder="Address">
-                    <input class="modal-content__form-section-input" id="cityEdit" type="text" name="city" placeholder="City">
-                    <input class="modal-content__form-section-input" id="zipCodeEdit" type="text" name="zipCode" placeholder="Zip code">
-                    <select class="container__register-section--input container__register-section--select" id="country" name="country">
-                        <option value="">Select a country</option>
-                        <option value="poland">Poland</option>
-                        <option value="germany">Germany</option>
-                        <option value="france">France</option>
-                        <option value="italy">Italy</option>
-                        <option value="spain">Spain</option>
-                    </select>
-                    <button class="modal-content__form-section-button" type="submit">Edit Category</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <div class="modal" id="deleteClientModal">
         <div class="modal-content">

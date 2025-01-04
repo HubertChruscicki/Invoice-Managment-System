@@ -50,4 +50,19 @@ class InvoicesController extends AppController
         }
 
     }
+
+    public function addInvoice()
+    {
+        if (!$this->isPost()) {
+            return $this->render('main');
+        }
+
+        $json = $_POST['productsJsonInput'];
+        $id = $_POST['clientCategoryID'];
+
+        echo $json;
+        echo $id;
+    }
 }
+
+

@@ -12,7 +12,6 @@
                 <th class="main-content__table-header-cell">VAT Value</th>
                 <th class="main-content__table-header-cell">Number of items</th>
                 <th class="main-content__table-header-cell">Actions</th>
-
             </tr>
             </thead>
             <tbody class="main-content__table-body"></tbody>
@@ -52,7 +51,6 @@
                 <div class="modal-content__form-section">
                     <input class="modal-content__form-section-input" id="categoryNameEdit" type="text" name="categoryName" placeholder="Category name">
                     <input class="modal-content__form-section-input" id="vatValueEdit" type="text" name="vatValue" placeholder="VAT (%)">
-                    <button class="modal-content__form-section-button" type="submit">Edit Category</button>
                 </div>
             </form>
         </div>
@@ -61,7 +59,6 @@
     <div class="modal" id="deleteCategoryModal">
         <div class="modal-content">
             <button class="modal-content__close-button" onclick="closeDeleteCategoryModal()">&times;</button>
-
             <h1 class="modal-content__title">Are you sure</h1>
 
                 <div class="modal-content__form-section">
