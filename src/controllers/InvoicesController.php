@@ -1,6 +1,10 @@
 <?php
 require_once 'AppController.php';
+require_once 'ClientsController.php';
 require_once dirname(__DIR__) . '/repository/InvoiceRepository.php';
+require_once dirname(__DIR__) . '/repository/ProductsRepository.php';
+require_once dirname(__DIR__) . '/repository/ClientsRepository.php';
+require_once dirname(__DIR__) . '/libraries/fpdf186/fpdf.php'; //TODO MOZE BELDY ROBIC
 class InvoicesController extends AppController
 {
     public function getInvoices()
@@ -57,11 +61,73 @@ class InvoicesController extends AppController
             return $this->render('main');
         }
 
-        $json = $_POST['productsJsonInput'];
-        $id = $_POST['clientCategoryID'];
+        $user_id = $_SESSION['id'];
 
-        echo $json;
-        echo $id;
+        $invoice_porducts_json = $_POST['productsJsonInput'];
+        $client_id = $_POST['clientInvoiceID'];
+        $date = $_POST['invoice_date'];
+        $clientRepository = ClientsRepository::getInstance();
+        $client = $clientRepository->getClientByID($user_id, $client_id);
+        $productRepository = ProductsRepository::getInstance();
+
+        if($invoice_porducts_json === "[]"){
+            echo json_encode(["message" => "fail", "error" => "empty list of products"]);
+            return;
+        } elseif (empty($client)) {
+            echo json_encode(["message" => "fail", "error" => "cant assign client to invoice"]);
+            return;
+        } elseif (empty($date)){
+            echo json_encode(["message" => "fail", "error" => "empty date"]);
+            return;
+        } else {
+            $products = json_decode($invoice_porducts_json, true);
+            foreach ($products as $product) {
+                $product = $productRepository->getProductByID($user_id, $product['id']);
+                if($product === null){
+                    echo json_encode(["message" => "fail", "error" => "invalid product"]);
+                    return;
+                }
+            }
+
+            $productsArray = [];
+
+            foreach ($products as $product) {
+                $productsArray[$product['id']] = $product['quantity'];
+            }
+
+
+
+            $invoiceRepository = InvoiceRepository::getInstance();
+            $invoiceRepository->addInvoice($user_id, $client_id, $date, $productsArray);
+            return $this->render('main', ['message' => 'Invoice successfully added!']); //TODO POZAMIENIAC RENDERY NA HEADERY
+        }
+
+
+
+
+    }
+
+    public function getInvoiceDetails(){
+
+        if(!$this->isGet()) {
+            return $this->render('main');
+        }
+
+        if (session_status() !== PHP_SESSION_ACTIVE || !isset($_SESSION['id'])) {
+            $this->render('main', ['message' => 'Session problem!']);
+        }
+
+        $user_id = $_SESSION['id'];
+        $invoice_id = $_GET['invoice_id'];
+        $invoiceRepostiory = InvoiceRepository::getInstance();
+
+        $invoiceDetailsJSON = $invoiceRepostiory->getInvoiceDetails((int)$user_id, (int)$invoice_id);
+
+        if(empty($invoiceDetailsJSON)){
+            echo json_encode(["message" => "fail", "error" => "invoice not found"]);
+        } else {
+            echo json_encode(["message" => "success", "invoiceDetailsJSON" => $invoiceDetailsJSON]);
+        }
     }
 }
 

@@ -50,6 +50,35 @@ class ProductsRepository extends Repository
 
     }
 
+    public function getProductByID(int $user_id, int $product_id)
+    {
+        $stmt =
+            "select p.id, p.id_category, p.id_company, p.name, p.price_brutto, p.price_netto from products p
+        join company c on c.id = p.id_company
+        join users u on u.id_company = c.id
+        where is_deleted = false and u.id = :user_id and p.id = :product_id"
+        ;
+        $stmt = $this->database->connect()->prepare($stmt);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if($product == false){
+            return null;
+        }
+
+        return new Product(
+            $product['id'],
+            $product['id_category'],
+            $product['id_company'],
+            $product['name'],
+            $product['price_brutto'],
+            $product['price_netto']
+        );
+
+    }
+
     public function addProduct(int $user_id, int $id_category, string $name, float $price_brutto, float $price_netto) //tutaj dostac sie do company id przez usera
     {
         try{

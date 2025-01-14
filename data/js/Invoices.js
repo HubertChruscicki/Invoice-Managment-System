@@ -71,6 +71,7 @@ function renderCell(invoices)
             <td class="main-content__table-cell">${invoice.total_price_brutto}</td>
             <td class="main-content__table-cell">${invoice.invoice_date}</td>
             <td class="main-content__table-cell">                       
+                <button class="main-content__action-button main-content__action-button--details" onclick="openInvoiceDetailsModal(${invoice.invoice_id}, ${invoice.total_price_brutto}, ${invoice.total_price_netto},${invoice.ammount_of_products}, '${invoice.invoice_date}')">Details</button>
                 <button class="main-content__action-button main-content__action-button--edit" onclick="generateInvoice('${invoice.id}')">Generate</button>
                 <button class="main-content__action-button main-content__action-button--delete" onclick="openDeleteModal('${invoice.name}')">Delete</button>
             </td>
@@ -193,11 +194,23 @@ function openAddInvoiceModal() {
         event.preventDefault();
         const clientID = document.getElementById('client-input-id');
         const productsJSON = document.getElementById('products-json-input');
+        const dateInput = document.getElementById('invoiceDate');
 
-        if (!clientID.value || productsList.length === 0) {
-            alert("Please select a client and at least one product.");
+        if (!clientID.value ) {
+            alert("Please select a client");
             return;
         }
+
+        if(productsList.length === 0){
+            alert("Please select at leat one product.");
+            return;
+        }
+
+        if(!dateInput.value){
+            alert("Please select date.");
+            return;
+        }
+
 
         productsJSON.value = JSON.stringify(productsList);
 
@@ -211,6 +224,7 @@ function closeAddInvoiceModal() { //TODO PRZERBOIC NA COS CO BEDZIE DZIALAC TYLK
     const modal = document.getElementById('addInvoiceModal');
     const modalInfo = document.querySelector('.modal-content__info');
     const chosenClientTbody = document.getElementById('chosenClient');
+    const productsTbody = document.getElementById('chosenProducts');
     const clientID = document.getElementById('client-input-id');
     const productsJSON = document.getElementById('products-json-input');
     modalInfo.textContent = "";
@@ -224,7 +238,17 @@ function closeAddInvoiceModal() { //TODO PRZERBOIC NA COS CO BEDZIE DZIALAC TYLK
             <td class="main-content__table-cell"></td>
             <td class="main-content__table-cell"></td>
             <td class="main-content__table-cell"></td>`;
+    productsTbody.innerHTML = `            
+            <td class="main-content__table-cell"></td>
+            <td class="main-content__table-cell"></td>
+            <td class="main-content__table-cell"></td>
+            <td class="main-content__table-cell"></td>
+            <td class="main-content__table-cell"></td>
+            <td class="main-content__table-cell"></td>
+            <td class="main-content__table-cell"></td>
+            <td class="main-content__table-cell"></td>`;
     clientID.value=null;
+    productsList=[];
     productsJSON.value=null;
 
 }
@@ -300,7 +324,8 @@ function renderProductList(products) {
             <td class="main-content__table-cell">${product.vat}%</td>
             <td class="main-content__table-cell">${product.vat_value}</td>
             <td class="main-content__table-cell">${product.price_netto}</td>
-            <td class="main-content__table-cell"><input type="number" min="1" value="${product.quantity}" onchange="updateProductQuantity('${product.id}', this.value)"></td>
+            <td class="main-content__table-cell">
+                <input class="modal-content__form-section-input modal-content__form-section-input--quantity" type="number" min="1" value="${product.quantity}" onchange="updateProductQuantity('${product.id}', this.value)"></td>
             <td class="main-content__table-cell">
                 <button class="main-content__action-button main-content__action-button--delete" onclick="deleteFromInvoice('${product.id}')">&times;</button>
             </td>
@@ -343,3 +368,106 @@ function deleteFromInvoice(productId) {
     productsList = productsList.filter(product => product.id !== productId);
     renderProductList(productsList); // Aktualizacja widoku tabeli
 }
+
+function getInvoiceDetails(invoice_id){
+    var endpoint = `getInvoiceDetails?invoice_id=${invoice_id}`;
+    // var endpoint = `getInvoiceDetails?invoice_id=${encodeURIComponent(invoice_id)}`;
+    return fetch(endpoint, {
+        method: 'GET',
+        credentials: 'include'
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then((data) => {
+            if (data.message === "success") {
+                return data.invoiceDetailsJSON;
+            } else {
+                throw new Error('invoice deatils not found');
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+            alert('Something went wrong witch geting invoice deatils!');
+            return null;
+        });
+}
+function openInvoiceDetailsModal(invoice_id, total_price_brutto, total_price_netto, ammount_of_products, invoice_date) {
+    const modal = document.getElementById('invoiceDetailsModal');
+    const modalInfo = document.querySelector('.modal-content__info');
+    const clientTbody = document.getElementById('invoiceDetailsClient');
+    const productsTbody = document.getElementById('invoiceDetailsProducts');
+    const totalAmountBruttoInfo = document.getElementById('totalAmountBruttoInfo');
+    const totalAmountNettoInfo = document.getElementById('totalAmountNettoInfo');
+    const amountProductsInfo = document.getElementById('amountProductsInfo');
+    const dateInfo = document.getElementById('dateInfo');
+    modal.style.display = 'flex';
+    document.body.classList.add('modal-open');
+
+    getInvoiceDetails(invoice_id).then( invoiceDetails => {
+        if(invoiceDetails) {
+            clientTbody.innerHTML = `
+            <tr>
+                <td class="main-content__table-cell">${invoiceDetails["client"][0]["client_name"]}</td>
+                <td class="main-content__table-cell">${invoiceDetails["client"][0]["client_nip"]}</td>
+                <td class="main-content__table-cell">${invoiceDetails["client"][0]["client_address"]}</td>
+                <td class="main-content__table-cell">${invoiceDetails["client"][0]["client_city"]}</td>
+                <td class="main-content__table-cell">${invoiceDetails["client"][0]["client_zip_code"]}</td>
+                <td class="main-content__table-cell">${invoiceDetails["client"][0]["client_country"]}</td>
+            </tr>
+            ` ;
+
+            productsTbody.innerHTML="";
+
+            for(let i=0; i < invoiceDetails["products"].length; i++){
+                productsTbody.innerHTML+=`
+            <tr>
+                <td class="main-content__table-cell">${invoiceDetails["products"][i]["name"]}</td>
+                <td class="main-content__table-cell">${invoiceDetails["products"][i]["category"]}</td>
+                <td class="main-content__table-cell">${invoiceDetails["products"][i]["price_brutto"]}</td>
+                <td class="main-content__table-cell">${invoiceDetails["products"][i]["vat"]}</td>
+                <td class="main-content__table-cell">${invoiceDetails["products"][i]["vat_value"]}</td>
+                <td class="main-content__table-cell">${invoiceDetails["products"][i]["price_netto"]}</td>
+                <td class="main-content__table-cell">${invoiceDetails["products"][i]["quantity"]}</td>
+            </tr>
+            ` ;
+            }
+
+            totalAmountBruttoInfo.textContent = total_price_brutto + "$";
+            totalAmountNettoInfo.textContent = total_price_netto  + "$";
+            amountProductsInfo.textContent = ammount_of_products;
+            dateInfo.textContent = invoice_date;
+
+        }
+    })
+
+
+
+
+
+}
+
+function closeInvoiceDetailsModal() {
+    const modal = document.getElementById('invoiceDetailsModal');
+    const clientTbody = document.getElementById('invoiceDetailsClient');
+    const productsTbody = document.getElementById('invoiceDetailsProducts');
+    const totalAmountBruttoInfo = document.getElementById('totalAmountBruttoInfo');
+    const totalAmountNettoInfo = document.getElementById('totalAmountNettoInfo');
+    const amountProductsInfo = document.getElementById('amountProductsInfo');
+    const dateInfo = document.getElementById('dateInfo');
+
+    modal.style.display = 'none';
+    document.body.classList.remove('modal-open');
+
+    clientTbody.innerHTML = "";
+    productsTbody.innerHTML="";
+    totalAmountBruttoInfo.textContent = "";
+    totalAmountNettoInfo.textContent = "";
+    amountProductsInfo.textContent = "";
+    dateInfo.textContent = "";
+
+}
+

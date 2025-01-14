@@ -23,9 +23,9 @@
         <h1 class="header__left-panel__name">Invoice Manager</h1>
     </div>
 
-    <div class="header__user-content">
+    <div class="header__user-content" onclick="logout()">
         <p class="header__user-content__name"></p>
-        <img class="header__user-content__icon" src="data/img/user-icon.png" alt="" onclick="logout()">
+        <img class="header__user-content__icon" src="data/img/user-icon.png" alt="">
     </div>
 
 </header>

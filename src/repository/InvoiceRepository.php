@@ -52,10 +52,10 @@ class InvoiceRepository extends Repository
     {
         try {
             $baseStmt = //TODO tu bedzie mozna wydupic niektore selecty
-                "SELECT i.id AS invoice_id, u.id_company AS company_id, s.id AS sale_id, cl.id AS client_id,
+                "SELECT  i.id AS invoice_id, u.id_company AS company_id, s.id AS sale_id, cl.id AS client_id,
                         i.date AS invoice_date, c.name AS company_name, c.nip AS company_nip, c.address AS company_address, c.city AS company_city, c.zip_code AS company_zip_code, c.country AS company_country,
                         cl.name AS client_name, cl.nip AS client_nip, cl.address AS client_address, cl.city AS client_city, cl.zip_code AS client_zip_code, cl.country AS client_country,
-                        SUM(p.price_netto * sp.quantity) AS total_price_netto, SUM(p.price_brutto * sp.quantity) AS total_price_brutto
+                        SUM(p.price_netto * sp.quantity) AS total_price_netto, SUM(p.price_brutto * sp.quantity) AS total_price_brutto , SUM(sp.quantity) as ammount_of_products
                         FROM users u
                                 JOIN company c ON c.id = u.id_company
                                 JOIN sales s ON s.id_company = c.id
@@ -74,11 +74,12 @@ class InvoiceRepository extends Repository
                 $baseStmt .= " AND LOWER(cl.name) ~ :namePrefix ";
                 }
             }
-            $baseStmt .=
-                "GROUP BY 
+            $baseStmt .= "
+                AND i.is_deleted = false
+                GROUP BY 
                     i.id, u.id_company, s.id, cl.id, i.date, c.name, c.nip, c.address, c.city,
                     c.zip_code, c.country, cl.name, cl.nip, cl.address, cl.city, cl.zip_code, cl.country
-                ORDER BY i.date
+                ORDER BY i.date desc
                 LIMIT :limit 
                 offset :offset";
             $stmt = $this->database->connect()->prepare($baseStmt);
@@ -97,6 +98,108 @@ class InvoiceRepository extends Repository
             return 0;
         }
     }
+
+    public function getInvoiceDetails(int $user_id, int $invoice_id)
+    {
+        $db = $this->database->connect();
+
+        try {
+            $stmt = $db ->prepare("
+            select s.id as sale_id, cl.name as client_name, cl.nip as client_nip, cl.address as client_address, 
+                   cl.city as client_city, cl.zip_code as client_zip_code, cl.country as client_country
+                from invoice i
+                join company c on c.id = i.id_company
+                join users u on u.id_company = c.id
+                join clients cl on cl.id = i.id_client
+                join sales s on s.id_invoice = i.id
+            where u.id = ? and i.id = ?
+        ");
+            $stmt->execute([
+                $user_id,
+                $invoice_id
+            ]);
+
+            $invoiceDetails = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $sale_id = $invoiceDetails[0]['sale_id'];
+
+            $stmt = $db ->prepare("
+                select p.name as name, c.name as category, price_brutto, vat , ROUND((vat/100 * price_brutto),2) as vat_value, price_netto, quantity
+                    from sale_products sp
+                    join sales s on s.id = sp.id_sale
+                    join products p on p.id = sp.id_product
+                    join product_categories c on c.id = p.id_category
+                    where status = 'contain-invoice' and sp.id_sale = ?
+        ");
+            $stmt->execute([$sale_id]);
+            $prodcuts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $invoiceDetailsJSON = json_encode(["client" => $invoiceDetails,"products" => $prodcuts]);
+            return json_decode($invoiceDetailsJSON);
+
+
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            throw new Exception("Failed to get invoice details." . $e->getMessage());
+        }
+    }
+    public function addInvoice($user_id, $client_id, $date, $productsArray)
+    {
+
+        $db = $this->database->connect();
+        $db->beginTransaction();
+
+        try {
+            $stmt = $db ->prepare("
+            WITH userCompanyID AS (
+                 SELECT u.id_company
+                     FROM users u
+                     JOIN company c ON c.id = u.id_company
+            WHERE u.id = ?
+            ),
+             newInvoiceID AS (
+                 INSERT INTO invoice (id_client, id_company, date)
+                     SELECT ?, id_company, ?
+                     FROM userCompanyID
+                     RETURNING id
+             ),
+             newSalesID AS (
+                 INSERT INTO sales (id_invoice, id_company, status)
+                     SELECT ni.id, uc.id_company, 'contain-invoice'
+                     FROM newInvoiceID ni, userCompanyID uc
+                     RETURNING id
+             )
+            SELECT * FROM newSalesID;
+        ");
+            $stmt->execute([
+                $user_id,
+                $client_id,
+                $date
+            ]);
+
+            $sales_id = $stmt->fetch(PDO::FETCH_COLUMN);
+
+
+            $stmt = $db->prepare("
+            INSERT INTO sale_products (id_sale, id_product, quantity)
+            VALUES (?, ?, ?);
+        ");
+
+            foreach ($productsArray as $idProduct => $quantity) {
+                $stmt->execute([
+                    $sales_id,
+                    $idProduct,
+                    $quantity
+                ]);
+            }
+            $db->commit();
+
+        } catch (PDOException $e) {
+            $db->rollBack();
+            error_log($e->getMessage());
+            throw new Exception("Failed to add new invoice to database." . $e->getMessage());
+        }
+    }
+
 
 
 

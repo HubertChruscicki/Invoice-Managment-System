@@ -88,19 +88,35 @@
 .main-content__action-button--edit {
     background-color: #007bff;
     color: white;
+    font-weight: bold;
+
 }
 
 .main-content__action-button--edit:hover {
     background-color: #0056b3;
 }
 
+.main-content__action-button--details {
+    background-color: #03cdfa;
+    color: white;
+    font-weight: bold;
+
+}
+
+.main-content__action-button--details:hover {
+    background-color: #00a9c7;
+}
+
 .main-content__action-button--delete {
     background-color: #ff4d4d;
     color: white;
+    font-weight: bold;
+
 }
 
 .main-content__action-button--delete:hover {
     background-color: #cc0000;
+
 }
 
 .main-content__pagination, .main-content__pagination-2, .main-content__pagination-3{

@@ -2,7 +2,7 @@
 
 require_once 'AppController.php';
 require_once __DIR__ . '/../repository/CategoryRepository.php';
-
+//TODO ZROBICP OWIAZANIE TABELI COMPANY Z CATEGORIES
 class CategoryController extends AppController
 {
 

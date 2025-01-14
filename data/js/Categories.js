@@ -69,14 +69,12 @@ function updateCategoryList(namePrefix = ''){ //TODO POPRACOWAC NAD LADOWANIEM T
         credentials: 'include'
     })
         .then((response) => {
-            console.log(response);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
         })
         .then((data) => {
-            console.log(data)
             if (data.message === "success" ) {
                 const categoryListElement = document.getElementById('category-list');
                 categoryListElement.innerHTML = '';
@@ -345,75 +343,6 @@ function closeDeleteCategoryModal() {
 }
 
 
-//TODO KURWA NIE DA SIE ZMIENIC PLACEHOLDERA NIE DZIALA WGL DOPISAC TO DO KONCA
-function openEditCategoryModal(category, vat) {
-    const modal = document.getElementById('editCategoryModal');
-    const form = document.querySelector('.edit-category');
-    const modalInfo = document.querySelector('.modal-content__info');
-    const categoryName = document.getElementById('categoryNameEdit');
-    const vatValue = document.getElementById('vatValueEdit');
-
-    modal.style.display = 'flex';
-    document.body.classList.add('modal-open');
-
-    categoryName.value = category;
-    vatValue.value = vat;
-
-    form.addEventListener('submit', (event) => {
-        event.preventDefault();
-
-        if (categoryName.value === '' || vatValue.value === '') {
-            modalInfo.style.display = 'flex';
-            modalInfo.textContent = "You have to fill all fields!";
-            return;
-        }
-
-        getCategories(1, 0, categoryName.value)
-            .then((existingCategories) => {
-                console.log(existingCategories);
-                if (existingCategories && existingCategories.length > 0) {
-                    modalInfo.style.display = 'flex';
-                    modalInfo.textContent = "Such category exists!";
-                    return;
-                }
-                if (!Number(vatValue.value)) {
-                    modalInfo.style.display = 'flex';
-                    modalInfo.textContent = "Vat must be a number!";
-                    return;
-                }
-                if (Number(vatValue.value) === 0.0) {
-                    modalInfo.style.display = 'flex';
-                    modalInfo.textContent = "Vat cannot be 0!";
-                    return;
-                }
-                if (Number(vatValue.value) < 0.0) {
-                    modalInfo.style.display = 'flex';
-                    modalInfo.textContent = "Vat cannot be negative!";
-                    return;
-                }
-
-                // Jeśli wszystko jest poprawne, można wysłać formularz
-                // form.submit();
-            })
-            .catch((error) => {
-                console.error("Error fetching categories:", error);
-                modalInfo.style.display = 'flex';
-                modalInfo.textContent = "Error fetching categories.";
-            });
-    });
-}
-
-function closeEditCategoryModal() {
-    const modal = document.getElementById('editCategoryModal');
-    const modalInfo = document.querySelector('.modal-content__info');
-    modalInfo.textContent = "";
-    modalInfo.style.display = "none"
-    modal.style.display = 'none';
-    document.body.classList.remove('modal-open');
-
-}
 
 
 
-//TODO EDIT BARDZO CIEZKI DO ZREALIZOWANIA
-console.log("loaded cat");

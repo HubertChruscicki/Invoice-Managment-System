@@ -9,7 +9,7 @@ function loadSectionContent(sectionName, menuItem = null) {
             mainContent.innerHTML = html;
             if (menuItem) setActive(menuItem);
 
-            if (sectionName === "Categories") { //todo polepszyc
+            if (sectionName === "Categories") { //todo POLEPSZYC ZEBY NIE BYLO TYLE KODU
                 const script = document.createElement('script');
                 script.src = 'data/js/Categories.js';
                 script.onload = () => {
@@ -66,7 +66,6 @@ function switchMainContent(clickedItem) {
 }
 function loadActiveSection() {
     const activeSection = localStorage.getItem('activeSection') || 'dashboard';
-    console.log(activeSection);
     const menuItem = document.querySelector(`.layout__sidebar-menu--item[data-menu-bar="${activeSection}"]`);
     if(menuItem){
         loadSectionContent(activeSection, menuItem);

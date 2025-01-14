@@ -363,4 +363,3 @@ function closeDeleteProductModal() {
 //     console.log(searchTerm);
 // });
 
-console.log("loaded prod");

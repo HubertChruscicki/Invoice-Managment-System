@@ -60,8 +60,16 @@ class ProductsController extends AppController
         }
 
         $productsRepository->addProduct((int)$user_id, $id_category, $name, $price_brutto, $price_netto);
-        return $this->render('main', ['message' => 'Product successfully added!']);
+
+//        return $this->render('main', ['message' => 'Product successfully added!']);
+
+
+        $url = '/';
+        header("Location: $url");
+        exit;
+//        todo czemu tak nie moge
     }
+
 
     public function howManyProducts()
     {

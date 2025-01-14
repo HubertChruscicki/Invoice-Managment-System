@@ -32,6 +32,7 @@ Router::get('getInvoices', 'InvoicesController');
 Router::get('howManyInvoices', 'InvoicesController');
 Router::get('deleteInvoice', 'InvoicesController');
 Router::post('addInvoice', 'InvoicesController'); //tu zmieniane wszystkie metdoy na post
+Router::get('getInvoiceDetails', 'InvoicesController'); //tu zmieniane wszystkie metdoy na post
 
 
 Router::post('login', 'SecurityController');

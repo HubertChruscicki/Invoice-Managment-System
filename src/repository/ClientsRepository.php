@@ -55,6 +55,36 @@ class ClientsRepository extends Repository
         );
     }
 
+    public function getClientByID(int $user_id, int $client_id): ?Client
+    {
+        $stmt = $this->database->connect()->prepare
+        ("select cl.id, cl.name, cl.nip, cl.address, cl.city, cl.zip_code, cl.country
+                    from clients cl
+                    join company_clients ccl on cl.id = ccl.id_client
+                    join company c on c.id = ccl.id_company
+                    join users u on u.id_company = c.id
+                    where is_deleted = false and u.id = :user_id
+                    and cl.id = :client_id
+      ");
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindParam(":client_id", $client_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $client = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($client == false) {
+            return null; //exception TODO
+        }
+
+        return new Client(
+            $client['id'],
+            $client['name'],
+            $client['address'],
+            $client['city'],
+            $client['zip_code'],
+            $client['country']
+        );
+    }
+
     public function addClient(int $user_id, string $name, string $nip, string $address, string $city, string $zip_code, string $country)
     {
         try {

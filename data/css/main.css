@@ -58,7 +58,7 @@ padding-left: 30px;
     cursor: pointer;
 }
 
-.header__user-content__icon:hover{
+.header__user-content:hover{
     filter: invert(1) brightness(100);
 }
 
@@ -341,6 +341,7 @@ padding-left: 30px;
 }
 
 .modal-content__form-section-client,
+
 .modal-content__form-section-right {
     display: flex;
     flex-direction: column;
@@ -349,6 +350,25 @@ padding-left: 30px;
     width: 95%; /* Każda sekcja zajmuje 45% szerokości */
     text-align: left;
 }
+
+.modal-content__form-section-lower {
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    justify-content: center;
+    max-width: 90%; /* Każda sekcja zajmuje 45% szerokości */
+    text-align: left;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 2.5%;
+    font-size: 0.7em;
+    text-align: left;
+}
+
+.modal-content__form-section-lower h1{
+    margin: 4px;
+}
+
 
 .modal-content__form-section-client p,
 .modal-content__form-section-right p{
@@ -392,6 +412,20 @@ padding-left: 30px;
     padding-left: 15px;
 }
 
+.modal-content__form-section-input--quantity{
+    max-width: 90px;
+    max-height: 35px;
+    padding: 0px;
+    text-align: center;
+}
+
+.modal-content__form-section-input--date {
+    /*TODO LEPSZA REPONSYWNOSC DLA MOBILE*/
+    margin-top: 10px;
+    width: 25%;
+    align-self: flex-end;
+}
+
 .modal-content__form-section-input--autocomplete-box{
     width: 100%;
 }
@@ -422,8 +456,6 @@ padding-left: 30px;
     cursor: pointer;
     display: flex;
 }
-
-
 
 
 .modal-content__form-section-select{
