@@ -6,6 +6,7 @@ $path = trim($_SERVER['REQUEST_URI'], '/');
 $path = parse_url($path, PHP_URL_PATH);
 
 Router::get('', 'DefaultController');
+Router::get('index', 'DefaultController');
 Router::get('main', 'DefaultController');
 Router::get('user', 'DefaultController');
 
@@ -25,14 +26,15 @@ Router::post('addClient', 'ClientsController');
 Router::get('getProducts', 'ProductsController');
 Router::get('howManyProducts', 'ProductsController');
 Router::get('deleteProduct', 'ProductsController');
-Router::post('addProduct', 'ProductsController'); //tu zmieniane wszystkie metdoy na post
+Router::post('addProduct', 'ProductsController');
 
 
 Router::get('getInvoices', 'InvoicesController');
 Router::get('howManyInvoices', 'InvoicesController');
 Router::get('deleteInvoice', 'InvoicesController');
-Router::post('addInvoice', 'InvoicesController'); //tu zmieniane wszystkie metdoy na post
-Router::get('getInvoiceDetails', 'InvoicesController'); //tu zmieniane wszystkie metdoy na post
+Router::post('addInvoice', 'InvoicesController');
+Router::get('getInvoiceDetails', 'InvoicesController');
+Router::get('generateInvoicePDF', 'InvoicesController');
 
 
 Router::post('login', 'SecurityController');

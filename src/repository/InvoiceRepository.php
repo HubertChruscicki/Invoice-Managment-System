@@ -106,7 +106,7 @@ class InvoiceRepository extends Repository
         try {
             $stmt = $db ->prepare("
             select s.id as sale_id, cl.name as client_name, cl.nip as client_nip, cl.address as client_address, 
-                   cl.city as client_city, cl.zip_code as client_zip_code, cl.country as client_country
+                   cl.city as client_city, cl.zip_code as client_zip_code, cl.country as client_country, i.date as invoice_date
                 from invoice i
                 join company c on c.id = i.id_company
                 join users u on u.id_company = c.id
@@ -131,9 +131,24 @@ class InvoiceRepository extends Repository
                     where status = 'contain-invoice' and sp.id_sale = ?
         ");
             $stmt->execute([$sale_id]);
+
             $prodcuts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $invoiceDetailsJSON = json_encode(["client" => $invoiceDetails,"products" => $prodcuts]);
+            $stmt = $db ->prepare("
+                select c.name as company_name, c.nip as company_nip, c.address as company_address, c.city as company_city,
+                    c.zip_code as company_zip_code, c.country as company_country
+                    from company c
+                    join users u on u.id_company = c.id
+                    where u.id = ?
+
+        ");
+            $stmt->execute([$user_id]);
+
+            $company = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+
+            $invoiceDetailsJSON = json_encode(["client" => $invoiceDetails, "products" => $prodcuts, "company" => $company]);
             return json_decode($invoiceDetailsJSON);
 
 

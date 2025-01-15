@@ -72,7 +72,7 @@ function renderCell(invoices)
             <td class="main-content__table-cell">${invoice.invoice_date}</td>
             <td class="main-content__table-cell">                       
                 <button class="main-content__action-button main-content__action-button--details" onclick="openInvoiceDetailsModal(${invoice.invoice_id}, ${invoice.total_price_brutto}, ${invoice.total_price_netto},${invoice.ammount_of_products}, '${invoice.invoice_date}')">Details</button>
-                <button class="main-content__action-button main-content__action-button--edit" onclick="generateInvoice('${invoice.id}')">Generate</button>
+                <button class="main-content__action-button main-content__action-button--edit" onclick="generateInvoice(${invoice.invoice_id})">PDF</button>
                 <button class="main-content__action-button main-content__action-button--delete" onclick="openDeleteModal('${invoice.name}')">Delete</button>
             </td>
         `;
@@ -449,6 +449,15 @@ function openInvoiceDetailsModal(invoice_id, total_price_brutto, total_price_net
 
 
 }
+
+function generateInvoice(invoice_id) {
+    console.log(invoice_id);
+    var endpoint = `/generateInvoicePDF?invoice_id=${invoice_id}`; // Relatywny URL
+
+    // Otwórz PDF w nowej karcie przeglądarki
+    window.open(endpoint, '_blank');
+}
+
 
 function closeInvoiceDetailsModal() {
     const modal = document.getElementById('invoiceDetailsModal');
