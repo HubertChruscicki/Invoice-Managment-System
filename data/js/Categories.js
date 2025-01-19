@@ -1,11 +1,5 @@
 var currentOffset = 0;
-function pausecomp(millis) //TODO USUNAC
-{
-    var date = new Date();
-    var curDate = null;
-    do { curDate = new Date(); }
-    while(curDate-date < millis);
-}
+
 function getCategories(limit = 10, offset = 0, namePrefix = ''){
     namePrefix = namePrefix.toLowerCase();
     var endpoint = `getCategories?limit=${limit}&offset=${offset}&namePrefix=${namePrefix}`;
@@ -24,7 +18,7 @@ function getCategories(limit = 10, offset = 0, namePrefix = ''){
                 return data.categories
             } else {
                 // throw new Error('Categories not found');
-                return []; //TODO TAKI HANDLE ZAPEWNIA DZIALANIE MI SIE WYDAJE
+                return [];
             }
         })
         .catch((error) => {
@@ -59,8 +53,8 @@ function howManyCategories(namePrefix = ''){
             return null;
         });
 }
-                                                                    //TODO POMYSLEC CO ZROBIC JAK SIE DODA COS BO WYEDY ZYL ALERT PO ODJECIU DODAJE OSTATNIE WYBRANE
-function updateCategoryList(namePrefix = ''){ //TODO POPRACOWAC NAD LADOWANIEM TEGO BO NEI DZIALA JAK POWINNO SIGMA
+
+function updateCategoryList(namePrefix = ''){
     namePrefix = namePrefix.toLowerCase();
     // var endpoint = `getCategories?namePrefixlimit=${limit}&${namePrefix}`;
     var endpoint = `getCategories?limit=${128}&namePrefix=${namePrefix}`;
@@ -106,29 +100,54 @@ function updateCategoryList(namePrefix = ''){ //TODO POPRACOWAC NAD LADOWANIEM T
         });
 }
 
-function renderCell(categories)
+function renderCell(categories, path =null)
 {
-    const tbody = document.querySelector('.main-content__table-body');
+    let tbody;
+    if(path!==null)
+    {
+        tbody = document.querySelector(`.${path}`);
+    }
+    else
+    {
+        tbody = document.querySelector('.main-content__table-body');
+    }
     tbody.innerHTML='';
+
+
 
     if(categories.length === 0){
         return;
     }
-
     categories.forEach(category =>{
         const row = document.createElement('tr');
         row.innerHTML = `
             <td class="main-content__table-cell">${category.name}</td>
             <td class="main-content__table-cell">${category.vat}%</td>
             <td class="main-content__table-cell">${category.ammountproducts}</td> 
-            <td class="main-content__table-cell">
-                <button class="main-content__action-button main-content__action-button--delete" onclick="openDeleteModal('${category.name}')">Delete</button>
-            </td>
+
         `;
+
+        if(path!==null)
+        {
+            row.innerHTML += `
+                <td class="main-content__table-cell">
+                    <button class="main-content__action-button main-content__action-button--edit" onclick="assignCategoryToProduct('${category.id}','${client.name}','${client.vat}','${client.ammountproducts}')">Select</button>
+                </td>
+            `;
+
+        }
+        else
+        {
+            row.innerHTML += `
+                <td class="main-content__table-cell">
+                    <button class="main-content__action-button main-content__action-button--delete" onclick="openDeleteModal('${category.name}')">Delete</button>
+                </td>            
+            `;
+        }
         tbody.appendChild(row)
     })
 }
-function loadCategories(limit = 10, offset = 0, namePrefix = ''){
+function loadCategories(limit = 10, offset = 0, namePrefix = '', path = null){
     currentOffset = offset;
     namePrefix=namePrefix.toLowerCase();
     getCategories(limit, offset, namePrefix)
@@ -139,7 +158,7 @@ function loadCategories(limit = 10, offset = 0, namePrefix = ''){
                     .then(ammountCategories => {
                         const totalPages = Math.ceil(ammountCategories/ limit);
                         const currentPage = Math.floor(offset/limit) + 1;
-                        createPaginationControls(totalPages, currentPage, limit, namePrefix)
+                        createPaginationControls(totalPages, currentPage, limit, namePrefix, path)
                     }).catch(error => {
                         console.log('Error fetching ammount of categories: ', error);
                     })
@@ -153,29 +172,25 @@ function loadCategories(limit = 10, offset = 0, namePrefix = ''){
             console.error('Error loading categories:', error);
         })
 }
-function createPaginationControls(totalPages, currentPage, limit, namePrefix = '') { //todo przepisac na jedna funkcje
+function createPaginationControls(totalPages, currentPage, limit, namePrefix = '', path=null) {
     namePrefix = namePrefix.toLowerCase();
     const paginationContainer = document.querySelector('.main-content__pagination');
     paginationContainer.innerHTML = '';
 
     if (totalPages > 1) {
-        // Przycisk "Poprzednia strona"
         const prevButton = document.createElement('button');
         prevButton.textContent = '<';
         prevButton.classList.add('main-content__pagination-button');
         if (currentPage > 1) {
-            // Dodano przekazanie namePrefix do loadCategories w prevButton
-            prevButton.onclick = () => loadCategories(limit, (currentPage - 2) * limit, namePrefix);
+            prevButton.onclick = () => loadCategories(limit, (currentPage - 2) * limit, namePrefix, path);
         } else {
             prevButton.disabled = true;
         }
         paginationContainer.appendChild(prevButton);
 
-        // Wyświetlanie przycisków stron
         const startPage = Math.max(1, currentPage - 3);
         const endPage = Math.min(totalPages, currentPage + 3);
 
-        // Zawsze pokaż pierwszą stronę
         if (startPage > 1) {
             const firstPageButton = document.createElement('button');
             firstPageButton.textContent = '1';
@@ -183,12 +198,10 @@ function createPaginationControls(totalPages, currentPage, limit, namePrefix = '
             if (currentPage === 1) {
                 firstPageButton.classList.add('main-content__pagination-page--active');
             }
-            // Dodano przekazanie namePrefix do loadCategories w firstPageButton
-            firstPageButton.onclick = () => loadCategories(limit, 0, namePrefix);
+            firstPageButton.onclick = () => loadCategories(limit, 0, namePrefix, path);
             paginationContainer.appendChild(firstPageButton);
         }
 
-        // Przyciski dla stron w zakresie startPage - endPage
         for (let i = startPage; i <= endPage; i++) {
             const pageButton = document.createElement('button');
             pageButton.textContent = i;
@@ -196,12 +209,10 @@ function createPaginationControls(totalPages, currentPage, limit, namePrefix = '
             if (i === currentPage) {
                 pageButton.classList.add('main-content__pagination-page--active');
             }
-            // Dodano przekazanie namePrefix do loadCategories w przyciskach stron
-            pageButton.onclick = () => loadCategories(limit, (i - 1) * limit, namePrefix);
+            pageButton.onclick = () => loadCategories(limit, (i - 1) * limit, namePrefix, path);
             paginationContainer.appendChild(pageButton);
         }
 
-        // Zawsze pokaż ostatnią stronę
         if (endPage < totalPages) {
             const lastPageButton = document.createElement('button');
             lastPageButton.textContent = totalPages;
@@ -209,26 +220,23 @@ function createPaginationControls(totalPages, currentPage, limit, namePrefix = '
             if (currentPage === totalPages) {
                 lastPageButton.classList.add('main-content__pagination-page--active');
             }
-            // Dodano przekazanie namePrefix do loadCategories w lastPageButton
-            lastPageButton.onclick = () => loadCategories(limit, (totalPages - 1) * limit, namePrefix);
+            lastPageButton.onclick = () => loadCategories(limit, (totalPages - 1) * limit, namePrefix, path);
             paginationContainer.appendChild(lastPageButton);
         }
 
-        // Przycisk "Następna strona"
         const nextButton = document.createElement('button');
         nextButton.textContent = '>';
         nextButton.classList.add('main-content__pagination-button');
         if (currentPage < totalPages) {
-            // Dodano przekazanie namePrefix do loadCategories w nextButton
-            nextButton.onclick = () => loadCategories(limit, currentPage * limit, namePrefix);
+            nextButton.onclick = () => loadCategories(limit, currentPage * limit, namePrefix, path);
         } else {
             nextButton.disabled = true;
         }
         paginationContainer.appendChild(nextButton);
     }
 }
-function searchCategoryByPrefix(input, limit = 10, offset = 0){
-            loadCategories(limit, offset, input);
+function searchCategoryByPrefix(input, path, limit = 10, offset = 0){
+            loadCategories(limit, offset, input, path);
 }
 function openAddCategoryModal() {
     const modal = document.getElementById('addCategoryModal');
@@ -273,7 +281,6 @@ function openAddCategoryModal() {
                     return;
                 }
 
-                // Jeśli wszystko jest poprawne, wysyłamy formularz
                 form.submit();
             })
             .catch((error) => {
@@ -292,7 +299,7 @@ function closeAddCategoryModal() {
     modal.style.display = 'none';
     document.body.classList.remove('modal-open');
 }
-function openDeleteModal(name){ //TODO BIDA NIE DZIALA HEJ
+function openDeleteModal(name){
     const modal = document.getElementById('deleteCategoryModal');
     const deleteBttn = document.querySelector('.modal-content__form-section-delete-button');
     modal.style.display = 'flex';
@@ -316,7 +323,6 @@ function openDeleteModal(name){ //TODO BIDA NIE DZIALA HEJ
                 return response.json();
             })
             .then((data)=>{
-                console.log(data);
                 if(data.message === "success"){
                     modal.style.display = 'none';
                     document.body.classList.remove('modal-open');

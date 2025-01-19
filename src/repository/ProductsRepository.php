@@ -79,7 +79,7 @@ class ProductsRepository extends Repository
 
     }
 
-    public function addProduct(int $user_id, int $id_category, string $name, float $price_brutto, float $price_netto) //tutaj dostac sie do company id przez usera
+    public function addProduct(int $user_id, int $id_category, string $name, float $price_brutto, float $price_netto)
     {
         try{
             $stmt =

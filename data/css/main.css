@@ -72,6 +72,7 @@ padding-left: 30px;
     display: flex;
     width: 100%;
     height: 100%;
+    background-color: hsl(0, 0%, 90%);
 }
 
 .layout__sidebar {
@@ -84,6 +85,16 @@ padding-left: 30px;
     justify-content: flex-start;
     align-items: stretch;
     overflow: hidden;
+}
+
+.layout__sidebar-exit{
+    background-color: transparent;
+    font-weight: bold;
+    font-size: 4rem;
+    color: #00c16e;
+    border: none;
+    display: none;
+    padding: 0;
 }
 
 .layout__sidebar-menu {
@@ -148,6 +159,8 @@ padding-left: 30px;
     flex-direction: column;
     align-items: center;
     position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
 
 }
 
@@ -170,96 +183,11 @@ padding-left: 30px;
     filter: invert(1) brightness(100);
 }
 
-/*TODO ZMIANA*/
 .testclass{
     display: none;
 }
 
-/* Media Queries */
-@media (max-width: 1250px) {
-    .layout__sidebar {
-        align-items: center;
-    }
 
-    .layout__sidebar-menu{
-        width: 100%;
-    }
-
-    .layout__sidebar-menu--item {
-        flex-direction: column;
-        align-items: center;
-        justify-content: left;
-        padding: 10px;
-        text-align: left;
-    }
-
-    .layout__sidebar-menu--item img {
-        margin-right: 0;
-        margin-bottom: 5px;
-        width: 40px;
-    }
-
-
-    .layout__sidebar-menu--item p {
-        display: none;
-    }
-}
-
-@media (max-width: 750px) {
-    .layout__sidebar {
-        display: none;
-    }
-
-    .header {
-        justify-content: space-between;
-        background-color: #00c16e;
-        color: rgb(37, 36, 36);
-        padding: 0 15px;
-    }
-    .header__left-panel {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        width: 75%;
-    }
-    .header__left-panel__button{
-        display: block; /* Pokazuje przycisk */
-        margin: 0;
-        padding: 0;
-    }
-
-    .header__user-content__icon{
-        margin: 0;
-    }
-
-    .header__user-content__name{
-        display: none;
-    }
-
-    .header__left-panel__name{
-        padding: 0;
-    }
-    .header__user-content{
-        height: 100%;
-    }
-
-    .testclass{
-        height: 100%;
-        width: 48px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .modal-content{
-
-        width: 75%;
-        overflow: hidden; /*TODO TO NIE MUSI BYC NAJLEPSZE*/
-    }
-
-
-}
 
 
 
@@ -275,7 +203,6 @@ padding-left: 30px;
     z-index: 1; /* Przykrywa inne elementy */
     justify-content: center;
     align-items: center;
-    /*TODO DEBUG CZEMU SIE CHOWA HEADER ADD INVOICE*/
 }
 
 .modal-visible {
@@ -407,7 +334,7 @@ padding-left: 30px;
 
 .modal-content__form-section-input{
     width: 100%;
-    box-sizing: border-box; /*TODO DODAC W LOGOWANIU REGISTER WTEDY NIE TRZEBA DAWAC WIDH 91 92 %*/
+    box-sizing: border-box;
     border: 0.005px solid #d4d4d4;
     background-color: white;
     font-size: 1.3em;
@@ -425,7 +352,6 @@ padding-left: 30px;
 }
 
 .modal-content__form-section-input--date {
-    /*TODO LEPSZA REPONSYWNOSC DLA MOBILE*/
     margin-top: 10px;
     width: 25%;
     align-self: flex-end;
@@ -562,7 +488,7 @@ body.modal-open {
     justify-content: flex-start;
     align-content: flex-start;
     flex-wrap: wrap;
-    padding-left: 16%;
+    padding-left: 8%;
     padding-top: 35px;
     /*background-color: orange;*/
 
@@ -654,7 +580,6 @@ body.modal-open {
     padding-right: 10px;
 }
 
-/*TODO MOBILE*/
 .panel-container {
     border-radius: 15px;
     width: 35%;
@@ -833,3 +758,158 @@ body.modal-open {
     background-color: #0056b3;
 }
 /*modal-content__form-section-button modal-content__form-section-button--option*/
+
+
+
+@media (max-width: 1250px) {
+    .layout__sidebar {
+        align-items: center;
+        /*min-width: 200px;*/
+    }
+
+    .layout__sidebar-menu{
+        width: 100%;
+    }
+
+    .layout__sidebar-menu--item {
+        flex-direction: column;
+        align-items: center;
+        justify-content: left;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .layout__sidebar-menu--item img {
+        margin-right: 0;
+        margin-bottom: 5px;
+        width: 40px;
+    }
+
+
+    .layout__sidebar-menu--item p {
+        display: none;
+    }
+
+    .tiles-container{
+        padding-left: 0;
+        justify-content: center;
+    }
+
+}
+
+
+
+@media (max-width: 750px) {
+    .layout{
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .layout__sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        z-index: 1000;
+        transform: translateX(0);
+        transition: transform 0.3s ease-in-out;
+        background-color: rgb(37, 36, 36);
+        justify-content: center;
+        display: none;
+    }
+    .layout__sidebar--active {
+        display: flex;
+    }
+
+    .layout__sidebar-exit{
+        display: flex;
+        align-self: flex-end;
+        margin-right: 15%;
+        margin-bottom: 5%;
+    }
+
+    .layout__sidebar-menu{
+        margin: 0;
+    }
+    .header {
+        justify-content: space-between;
+        background-color: #00c16e;
+        color: rgb(37, 36, 36);
+        padding: 0 15px;
+    }
+    .header__left-panel {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: 75%;
+    }
+    .header__left-panel__button{
+        display: block; /* Pokazuje przycisk */
+        margin: 0;
+        padding: 0;
+    }
+
+    .layout__sidebar-menu--item p {
+        display: flex;
+    }
+
+    .layout__sidebar-menu--item {
+        flex-direction: row;
+        padding-left: 30vw;
+        margin-top: 5%;
+        display: flex;
+    }
+
+
+
+
+    .header__user-content__icon{
+        margin-right: 0;
+    }
+
+    .header__user-content__name{
+        display: none;
+    }
+
+    .header__left-panel__name{
+        padding: 0;
+    }
+    .header__user-content{
+        height: 100%;
+    }
+
+    .testclass{
+        height: 100%;
+        width: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content{
+
+        width: 75%;
+        overflow: hidden;
+    }
+
+    .tiles-container{
+        padding-left: 0;
+        justify-content: center;
+    }
+
+
+
+}
+
+@media (max-width: 270px) {
+    .header__left-panel__name{
+        display: none;
+    }
+    .header{
+        height: 139px;
+    }
+
+}

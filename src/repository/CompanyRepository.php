@@ -29,7 +29,7 @@ class CompanyRepository extends Repository
         $company = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($company == false) {
-            return null; //exception TODO
+            return null;
         }
 
         return new Company(

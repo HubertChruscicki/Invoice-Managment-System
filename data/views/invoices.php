@@ -174,7 +174,6 @@
         <div class="modal-content modal-content--invoice">
             <button class="modal-content__close-button" type="button" onclick="closeInvoiceDetailsModal()">&times;</button>
 
-<!--            <h1 class="modal-content__title">Invoice details</h1>-->
 
                 <div class="modal-content__form-section">
 
@@ -201,7 +200,7 @@
                                     <td class="main-content__table-cell"></td>
                                     <td class="main-content__table-cell"></td>
                                     <td class="main-content__table-cell"></td>
-<!--                                    TODO ZAMIENIC NA CREATE TD-->
+
                                     </tbody>
                                 </table>
                             </div>
@@ -234,7 +233,6 @@
                                         <td class="main-content__table-cell"></td>
                                         <td class="main-content__table-cell"></td>
                                         <td class="main-content__table-cell"></td>
-<!--                                        TODO ZAMIENIC NA CREATE TD-->
                                     </tr>
                                     </tbody>
                                 </table>

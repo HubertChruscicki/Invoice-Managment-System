@@ -20,17 +20,21 @@ class CategoryRepository extends Repository
         return self::$instance;
     }
 
-    public function howManyCategories(string $namePrefix = null): int
+    public function howManyCategories(int $user_id, string $namePrefix = null): int
     {
-        $baseStmt = "SELECT count(*) FROM product_categories";
+        $baseStmt = "SELECT COUNT(*)
+                     FROM product_categories pc
+                         JOIN company_categories cc ON pc.id = cc.id_category
+                         JOIN company c ON c.id = cc.id_company
+                         JOIN users u ON u.id_company = c.id
+                         WHERE u.id = :user_id AND pc.is_deleted = false";
 
         if($namePrefix !== null){
-            $baseStmt .= " WHERE LOWER(name) ~ :namePrefix AND is_deleted = false;";
+            $baseStmt .= " AND LOWER(pc.name) ~ :namePrefix;";
         }
-        else{
-            $baseStmt .= " WHERE is_deleted = false;";
-        }
+
         $stmt = $this->database->connect()->prepare($baseStmt);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
         if($namePrefix !== null){
             $prefixRegex = '^' . $namePrefix;
             $stmt->bindParam(":namePrefix", $prefixRegex, PDO::PARAM_STR);
@@ -49,7 +53,7 @@ class CategoryRepository extends Repository
         $category = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($category == false) {
-            return null; //exception TODO
+            return null;
         }
 
         return new Category(
@@ -68,7 +72,7 @@ class CategoryRepository extends Repository
         $category = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($category == false) {
-            return null; //exception TODO
+            return null;
         }
 
         return new Category(
@@ -78,24 +82,26 @@ class CategoryRepository extends Repository
         );
     }
 
-    public function getCategoires(int $limit, int $offset, string $namePrefix = null): array
+    public function getCategories(int $user_id, int $limit, int $offset, string $namePrefix = null): array
     {
 
         $baseStmt = "
-            SELECT pc.id, pc.name, pc.vat, COUNT(p.id) AS ammountProducts
-            FROM public.product_categories pc LEFT JOIN public.products p ON pc.id = p.id_category AND p.is_deleted = false";
+                SELECT pc.id, pc.name, pc.vat, COUNT(p.id) AS ammountProducts
+                    FROM product_categories pc
+                    LEFT JOIN public.products p ON pc.id = p.id_category AND p.is_deleted = false
+                    JOIN company_categories cc on cc.id_category = pc.id
+                    JOIN users u on u.id_company = cc.id_company
+                    WHERE pc.is_deleted = false AND u.id = :user_id";
 
         if($namePrefix !== null){
-            $baseStmt .= " WHERE LOWER(pc.name) ~ :namePrefix AND pc.is_deleted = false";
-        }
-        else{
-            $baseStmt .= " WHERE pc.is_deleted = false";
+            $baseStmt .= " AND LOWER(pc.name) ~ :namePrefix";
         }
         $baseStmt .= " GROUP BY pc.id, pc.name, pc.vat
                        ORDER BY pc.name
                        LIMIT :limit OFFSET :offset";
 
         $stmt = $this->database->connect()->prepare($baseStmt);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 
         if($namePrefix !== null){
             $prefixRegex = '^' . $namePrefix;
@@ -110,33 +116,53 @@ class CategoryRepository extends Repository
 
 
 
-    public function addCategory(string $category_name, float $vat): void
+    public function addCategory(int $user_id, string $category_name, float $vat): void
     {
-        $stmt = $this->database->connect()->prepare('
-            INSERT INTO public.product_categories (name, vat)
-            VALUES (?, ?)
-            ');
+        $stmt = $this->database->connect()->prepare(
+            'WITH userCompanyID AS (
+                SELECT u.id_company
+                FROM users u
+                JOIN company c ON c.id = u.id_company
+                WHERE u.id = ?
+            ),
+            newCategoryID AS (
+                INSERT INTO product_categories (name, vat)
+                VALUES (?, ?)
+                RETURNING id
+            )
+            INSERT INTO company_categories (id_company, id_category)
+            SELECT uc.id_company, nc.id
+            FROM userCompanyID uc, newCategoryID nc;'
+           );
         $stmt->execute([
+            $user_id,
             $category_name,
             $vat
         ]);
     }
 
-    public function deleteCategory(string $category_name): bool
+    public function deleteCategory(int $user_id, string $category_name): bool
     {
         $baseStmt = "
-        WITH updated_category AS (
-            UPDATE public.product_categories 
-            SET is_deleted = true 
-            WHERE LOWER(name) = :category_name AND is_deleted = false
-            RETURNING id
+                WITH updated_category AS (
+                    UPDATE public.product_categories pc
+                    SET is_deleted = true
+                    FROM company_categories cc
+                    JOIN company c ON c.id = cc.id_company
+                    JOIN users u ON u.id_company = c.id
+                    WHERE pc.is_deleted = false
+                    AND u.id = :user_id
+                    AND LOWER(pc.name) = :category_name
+                    RETURNING pc.id
         )
         UPDATE public.products
-        SET is_deleted = true 
+        SET is_deleted = true
         FROM updated_category
-        WHERE products.id_category = updated_category.id;";
+        WHERE products.id_category = updated_category.id;
+        ";
 
         $stmt = $this->database->connect()->prepare($baseStmt);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 
         $stmt->bindParam(":category_name", $category_name, PDO::PARAM_STR);
         try {

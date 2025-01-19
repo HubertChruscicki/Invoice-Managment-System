@@ -27,7 +27,7 @@ class UserRepository extends Repository
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user == false) {
-            return null; //exception TODO
+            return null;
         }
         return new User(
             $user['id'],
@@ -95,7 +95,7 @@ class UserRepository extends Repository
         $adminRoleId = 1;
 
         try {
-        $this->addUser($companyId, $adminRoleId, $email, $pass, $company_name.'@admin', $company_name.'@admin');
+        $this->addUser($companyId, $adminRoleId, $email, $pass, $company_name, '@admin');
         } catch (Exception $e) {
         throw new Exception("Admin user adding error: " . $e->getMessage());
         }
@@ -108,9 +108,6 @@ class UserRepository extends Repository
            Select id from user_role
                 where role_name = :role_name"
         );
-//        $stmt->bindParam(":role_name", $role, PDO::PARAM_STR);
-//        $stmt->execute();
-//        $role_id = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $stmt = $this->database->connect()->prepare("
            select id_company from users
@@ -120,7 +117,6 @@ class UserRepository extends Repository
         $stmt->execute();
         $company_id = $stmt->fetch(PDO::FETCH_ASSOC);
 
-//        echo $role_id['id'];
         $this->addUser((int)$company_id, (int)$role ,$email, $password, $name, $surname);
 
 
@@ -133,7 +129,7 @@ class UserRepository extends Repository
     public function getUsers(int $user_id, int $limit, int $offset, string $searchPrefix = null, $searchByEmailFlag)
     {
         try {
-            $baseStmt = //TODO tu bedzie mozna wydupic niektore selecty
+            $baseStmt =
                 "select u.id, ur.role_name , u.name, u.surname, u.email 
                     from users u
                     join user_role ur on ur.id = u.id_user_role

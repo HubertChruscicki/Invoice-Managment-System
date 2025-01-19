@@ -7,18 +7,18 @@ class DefaultController extends AppController {
 
     public function index()
     {
-        if(!isset($_SESSION['id'])) //TODO ZOBACZY CZY NIE EMAIL
+        if(!isset($_SESSION['id']))
         {
             $this->render('login');
             return;
         }
-        $this->render('main'); //TODO pewnie dashboard
+        $this->render('main');
 
     }
 
     public function user()
     {
-        if(!isset($_SESSION['id'])) //TODO ZOBACZY CZY NIE EMAIL
+        if(!isset($_SESSION['id']))
         {
             $this->render('login');
             return;
@@ -30,7 +30,6 @@ class DefaultController extends AppController {
             $this->render('login');
             return;
         }
-//        $this->render('main');
     }
 
 }

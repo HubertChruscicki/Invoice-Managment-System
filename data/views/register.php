@@ -16,7 +16,6 @@
                 <form class = "register" action = "register" method="post">
                     <div class="container__register-section">
                             <h1 class="container__register-section--header">Register yourself</h1>
-                            <!-- <div class="container__register-section--info"></div> -->
                         <?php if (isset($messages)): ?>
                             <div class="form-content-container-info">
                                 <?php

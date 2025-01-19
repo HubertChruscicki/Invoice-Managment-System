@@ -17,7 +17,7 @@
 
 <header class="header">
     <div class="testclass">
-        <button class="header__left-panel__button" onclick="toggleSidebar()">☰</button>
+        <button class="header__left-panel__button" onclick="toggleSidebar(true)">☰</button>
     </div>
     <div class="header__left-panel">
         <h1 class="header__left-panel__name">Invoice Manager</h1>
@@ -32,6 +32,7 @@
 
 <div class="layout">
     <aside class="layout__sidebar" id="sidebar">
+        <button class="layout__sidebar-exit" onclick="toggleSidebar(false)">&times;</button>
         <ul class="layout__sidebar-menu">
             <li class="layout__sidebar-menu--item" data-menu-bar="Dashboard" onclick="switchMainContent(this)">
                 <img src="data/img/dashboard-icon.png" alt="">

@@ -24,7 +24,7 @@ class AppController {
         $output = 'File not found';
                 
         if(file_exists($templatePath)){
-            extract($variables); //dopisanie zmiennych do pliku
+            extract($variables);
             
             ob_start();
             include $templatePath;

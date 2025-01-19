@@ -42,7 +42,7 @@ class ClientsRepository extends Repository
         $client = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($client == false) {
-            return null; //exception TODO
+            return null;
         }
 
         return new Client(
@@ -72,7 +72,7 @@ class ClientsRepository extends Repository
         $client = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($client == false) {
-            return null; //exception TODO
+            return null;
         }
 
         return new Client(
@@ -89,7 +89,7 @@ class ClientsRepository extends Repository
     {
         try {
             $stmt = $this->database->connect()->prepare(
-                "WITH userCompanyID AS (
+                'WITH userCompanyID AS (
                 SELECT u.id_company
                 FROM users u
                 JOIN company c ON c.id = u.id_company
@@ -102,7 +102,7 @@ class ClientsRepository extends Repository
             )
             INSERT INTO company_clients (id_company, id_client)
             SELECT uc.id_company, nc.id
-            FROM userCompanyID uc, newClientID nc;"
+            FROM userCompanyID uc, newClientID nc;'
             );
 
             $stmt->execute([

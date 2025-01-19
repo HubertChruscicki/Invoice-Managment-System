@@ -43,13 +43,10 @@ Router::get('generateInvoicePDF', 'InvoicesController');
 
 Router::post('login', 'SecurityController');
 Router::get('logout', 'SecurityController');
-Router::post('register', 'SecurityController'); //todo zmienione na post sprawdzic
-Router::post('registerUser', 'SecurityController'); //todo zmienione na post sprawdzic
-//TODO CHANGEPASS SECURITYCONTROLLER
+Router::post('register', 'SecurityController');
+Router::post('registerUser', 'SecurityController');
 
 
-
-Router::get('forgot_password', 'DefaultController'); //TODO TEZ PRZEROBIC NA SECURITYCONTROLLER
 
 
 Router::run($path);

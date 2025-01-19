@@ -4,7 +4,7 @@ require_once 'ClientsController.php';
 require_once dirname(__DIR__) . '/repository/InvoiceRepository.php';
 require_once dirname(__DIR__) . '/repository/ProductsRepository.php';
 require_once dirname(__DIR__) . '/repository/ClientsRepository.php';
-require_once dirname(__DIR__) . '/libraries/fpdf186/fpdf.php'; //TODO MOZE BELDY ROBIC
+require_once dirname(__DIR__) . '/libraries/fpdf186/fpdf.php';
 class InvoicesController extends AppController
 {
     public function getInvoices()

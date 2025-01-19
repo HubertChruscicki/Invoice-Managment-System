@@ -131,7 +131,7 @@ function loadClients(limit = 10, offset = 0, namePrefix = '', searchByNipFlag = 
         })
 }
 
-function createClientPaginationControls(totalPages, currentPage, limit, namePrefix = '', path=null) { //todo przepisac na jedna funkcje
+function createClientPaginationControls(totalPages, currentPage, limit, namePrefix = '', path=null) {
     namePrefix = namePrefix.toLowerCase();
     let paginationContainer;
     if(path!==null)
@@ -142,7 +142,6 @@ function createClientPaginationControls(totalPages, currentPage, limit, namePref
     {
         paginationContainer = document.querySelector('.main-content__pagination');
     }
-    // const paginationContainer = document.querySelector('.main-content__pagination');
     paginationContainer.innerHTML = '';
 
     if (totalPages > 1) {
@@ -150,7 +149,7 @@ function createClientPaginationControls(totalPages, currentPage, limit, namePref
         prevButton.textContent = '<';
         prevButton.classList.add('main-content__pagination-button');
         if (currentPage > 1) {
-            prevButton.onclick = () => loadClients(limit, (currentPage - 2) * limit, namePrefix, false, path); //TODO FALSE NIE MOZE BYC BO WYSZUKIWANIE WYMAGA SPRAWDZENIA
+            prevButton.onclick = () => loadClients(limit, (currentPage - 2) * limit, namePrefix, false, path);
         } else {
             prevButton.disabled = true;
         }
@@ -196,7 +195,6 @@ function createClientPaginationControls(totalPages, currentPage, limit, namePref
         nextButton.textContent = '>';
         nextButton.classList.add('main-content__pagination-button');
         if (currentPage < totalPages) {
-            // Dodano przekazanie namePrefix do loadCategories w nextButton
             nextButton.onclick = () => loadClients(limit, currentPage * limit, namePrefix, false, path);
         } else {
             nextButton.disabled = true;
@@ -251,7 +249,6 @@ function openAddClientModal() {
                     return;
                 }
 
-                // Jeśli klient nie istnieje, wysyłamy formularz
                 form.submit();
             })
             .catch((error) => {
@@ -262,7 +259,7 @@ function openAddClientModal() {
     });
 }
 
-function closeAddClientModal() { //TODO PRZERBOIC NA COS CO BEDZIE DZIALAC TYLKO PO PODANIU ADDXLIENTMODAL
+function closeAddClientModal() {
     const modal = document.getElementById('addClientModal');
     const modalInfo = document.querySelector('.modal-content__info');
     modalInfo.textContent = "";
@@ -271,7 +268,7 @@ function closeAddClientModal() { //TODO PRZERBOIC NA COS CO BEDZIE DZIALAC TYLKO
     document.body.classList.remove('modal-open');
 }
 
-function openDeleteModal(name){ //TODO BIDA NIE DZIALA HEJ
+function openDeleteModal(name){
     const modal = document.getElementById('deleteClientModal');
     const deleteBttn = document.querySelector('.modal-content__form-section-delete-button');
     modal.style.display = 'flex';

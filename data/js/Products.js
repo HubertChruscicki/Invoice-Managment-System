@@ -143,7 +143,7 @@ function loadProducts(limit = 10, offset = 0, namePrefix = '', searchByCategoryF
 
 
 
-function createProductPaginationControls(totalPages, currentPage, limit, namePrefix = '', path=null) { //todo przepisac na jedna funkcje
+function createProductPaginationControls(totalPages, currentPage, limit, namePrefix = '', path=null) {
     namePrefix = namePrefix.toLowerCase();
 
     let paginationContainer;
@@ -209,7 +209,6 @@ function createProductPaginationControls(totalPages, currentPage, limit, namePre
         nextButton.textContent = '>';
         nextButton.classList.add('main-content__pagination-button');
         if (currentPage < totalPages) {
-            // Dodano przekazanie namePrefix do loadCategories w nextButton
             nextButton.onclick = () => loadProducts(limit, currentPage * limit, namePrefix, false, path);
         } else {
             nextButton.disabled = true;
@@ -251,7 +250,6 @@ function openAddProductModal() {
         getProducts(1, 0, productName)
             .then((existingProduct) => {
 
-                // Walidacja innych pól
                 if (productName === '' || productCategory === '' || priceBrutto === '') {
                     modalInfo.style.display = 'flex';
                     modalInfo.textContent = "You have to fill all fields!";
@@ -292,7 +290,7 @@ function openAddProductModal() {
 
 
 
-function closeAddProductModal() { //TODO PRZERBOIC NA COS CO BEDZIE DZIALAC TYLKO PO PODANIU ADDXLIENTMODAL
+function closeAddProductModal() {
     const modal = document.getElementById('addProductModal');
     const modalInfo = document.querySelector('.modal-content__info');
     modalInfo.textContent = "";
@@ -301,7 +299,7 @@ function closeAddProductModal() { //TODO PRZERBOIC NA COS CO BEDZIE DZIALAC TYLK
     document.body.classList.remove('modal-open');
 }
 
-function openDeleteModal(name){ //TODO BIDA NIE DZIALA HEJ
+function openDeleteModal(name){
     const modal = document.getElementById('deleteProductModal');
     const deleteBttn = document.querySelector('.modal-content__form-section-delete-button');
     modal.style.display = 'flex';

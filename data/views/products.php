@@ -38,16 +38,11 @@
             <form class="add-product" action="addProduct" method="POST">
                 <div class="modal-content__form-section">
                     <input class="modal-content__form-section-input" id="productName" type="text" name="name" placeholder="Product name">
-<!--                    <select class="modal-content__form-section-input modal-content__form-section-select" id="productCategory" name="productCategory">-->
-<!--                        <option value=8>Consoles</option>-->
-<!--                        <option value=13>Computer peripherals</option>-->
-<!--                    </select>-->
 
                     <div class="modal-content__form-section-input--autocomplete-box">
                         <input class="modal-content__form-section-input--autocomplete modal-content__form-section-input"  type="text" name="productCategory"
                                id="category-input" placeholder="Search for a category" oninput="updateCategoryList(this.value)">
                         <input type="hidden" id="category-input-id" name="productCategoryID" style="display: none">
-<!--                        <input class="modal-content__form-section-input--autocomplete modal-content__form-section-input"  type="text" name="productCategory" id="category-input" placeholder="Search for a category">-->
                         <ul class="form-section-input--autocomplete__list" id="category-list">
 <!--                            <li>SigmaSigmaSigmaSigmaSigmaSigmaSigma</li>-->
 <!--                            <li>Gyat</li>-->
@@ -79,8 +74,6 @@
     </div>
 </div>
 
-<!--<script src="data/js/Categories.js"></script>               TODO czemu ten import pierdoli dzialanie updatecategories w produktach xddd-->
-<!--<script src="data/js/Categories.js"></script>-->
-<!--<script src="data/js/Products.js"></script>-->
+
 
 

@@ -9,7 +9,7 @@ function loadSectionContent(sectionName, menuItem = null) {
             mainContent.innerHTML = html;
             if (menuItem) setActive(menuItem);
 
-            if (sectionName === "User") { //todo POLEPSZYC ZEBY NIE BYLO TYLE KODU
+            if (sectionName === "User") {
                 const script = document.createElement('script');
                 script.src = 'data/js/User.js';
                 script.onload = () => {
@@ -33,11 +33,11 @@ function loadSectionContent(sectionName, menuItem = null) {
             }
 
 
-            if (sectionName === "Dashboard") { //todo POLEPSZYC ZEBY NIE BYLO TYLE KODU
+            if (sectionName === "Dashboard") {
                 const script = document.createElement('script');
                 script.src = 'data/js/Dashboard.js';
                 script.onload = () => {
-                    updateDashboard(''); // Wywołanie funkcji z Categories.js
+                    updateDashboard('');
                 };
 
                 document.body.appendChild(script);
@@ -48,18 +48,18 @@ function loadSectionContent(sectionName, menuItem = null) {
                 const script = document.createElement('script');
                 script.src = 'data/js/Products.js';
                 script.onload = () => {
-                    loadProducts(20,0, ''); // Wywołanie funkcji z Categories.js
+                    loadProducts(20,0, '');
                 };
 
                 document.body.appendChild(script);
             }
 
-            if (sectionName === "Categories") { //todo POLEPSZYC ZEBY NIE BYLO TYLE KODU
+            if (sectionName === "Categories") {
                 const script = document.createElement('script');
                 script.src = 'data/js/Categories.js';
                 script.onload = () => {
 
-                    loadCategories(20,0, ''); // Wywołanie funkcji z Categories.js
+                    loadCategories(20,0, '');
                 };
 
                 document.body.appendChild(script);
@@ -70,7 +70,7 @@ function loadSectionContent(sectionName, menuItem = null) {
                 script.src = 'data/js/Clients.js';
                 script.onload = () => {
 
-                    loadClients(20,0, ''); // Wywołanie funkcji z Categories.js
+                    loadClients(20,0, '');
                 };
 
                 document.body.appendChild(script);
@@ -80,7 +80,7 @@ function loadSectionContent(sectionName, menuItem = null) {
                 const script = document.createElement('script');
                 script.src = 'data/js/Invoices.js';
                 script.onload = () => {
-                    loadInvoices(20,0, ''); // Wywołanie funkcji z Categories.js
+                    loadInvoices(20,0, '');
                 };
 
                 document.body.appendChild(script);
@@ -98,6 +98,7 @@ function switchMainContent(clickedItem) {
     const contentName = clickedItem.getAttribute('data-menu-bar');
     localStorage.setItem('activeSection', contentName);
     loadSectionContent(contentName, clickedItem);
+    toggleSidebar(false);
 }
 function loadActiveSection() {
     const activeSection = localStorage.getItem('activeSection') || 'dashboard';
@@ -114,6 +115,19 @@ function setActive(item) {
     item.classList.add('active');
 }
 
+
+
+
+function toggleSidebar(openFlag) {
+    const sidebar = document.querySelector('.layout__sidebar');
+    if(openFlag){
+        sidebar.classList.add("layout__sidebar--active");
+    } else {
+        sidebar.classList.remove("layout__sidebar--active");
+    }
+
+
+}
 
 
 

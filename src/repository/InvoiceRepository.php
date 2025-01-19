@@ -19,7 +19,7 @@ class InvoiceRepository extends Repository
         return self::$instance;
     }
 
-    public function howManyInvoices(int $user_id, string $namePrefix=null): int //TODO FLAGA $searchByNipFlag I W INNYCH KLASACH
+    public function howManyInvoices(int $user_id, string $namePrefix=null): int
     {
         $baseStmt =
             "SELECT COUNT(*)
@@ -51,7 +51,7 @@ class InvoiceRepository extends Repository
     public function getInvoices(int $user_id, int $limit, int $offset, string $namePrefix=null, $searchByNipFlag)
     {
         try {
-            $baseStmt = //TODO tu bedzie mozna wydupic niektore selecty
+            $baseStmt =
                 "SELECT  i.id AS invoice_id, u.id_company AS company_id, s.id AS sale_id, cl.id AS client_id,
                         i.date AS invoice_date, c.name AS company_name, c.nip AS company_nip, c.address AS company_address, c.city AS company_city, c.zip_code AS company_zip_code, c.country AS company_country,
                         cl.name AS client_name, cl.nip AS client_nip, cl.address AS client_address, cl.city AS client_city, cl.zip_code AS client_zip_code, cl.country AS client_country,

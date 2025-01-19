@@ -80,7 +80,6 @@ function renderUserCell(users)
                     <button class="main-content__action-button main-content__action-button--delete" onclick="openDeleteModal('${user.id}')">Delete</button>
                 </td>            
             `;
-            // TODO ADD EDIT
 
         tbody.appendChild(row);
     })
@@ -88,7 +87,7 @@ function renderUserCell(users)
 
 }
 
-function openDeleteModal(user_id){ //TODO BIDA NIE DZIALA HEJ
+function openDeleteModal(user_id){
     const modal = document.getElementById('deleteUserModal');
     const deleteBttn = document.querySelector('.modal-content__form-section-delete-button');
     modal.style.display = 'flex';
@@ -165,7 +164,7 @@ function loadUsers(limit = 10, offset = 0,  searchPrefix= '', searchByEmailFlag 
         })
 }
 
-function createUserPaginationControls(totalPages, currentPage, limit, searchPrefix = '', path=null) { //todo przepisac na jedna funkcje
+function createUserPaginationControls(totalPages, currentPage, limit, searchPrefix = '', path=null) {
     searchPrefix = searchPrefix.toLowerCase();
     const paginationContainer = document.querySelector('.main-content__pagination');;
     paginationContainer.innerHTML = '';
@@ -175,7 +174,7 @@ function createUserPaginationControls(totalPages, currentPage, limit, searchPref
         prevButton.textContent = '<';
         prevButton.classList.add('main-content__pagination-button');
         if (currentPage > 1) {
-            prevButton.onclick = () => loadUsers(limit, (currentPage - 2) * limit, searchPrefix, false); //TODO FALSE NIE MOZE BYC BO WYSZUKIWANIE WYMAGA SPRAWDZENIA
+            prevButton.onclick = () => loadUsers(limit, (currentPage - 2) * limit, searchPrefix, false);
         } else {
             prevButton.disabled = true;
         }
@@ -498,7 +497,7 @@ function openAddUserModal() {
     });
 }
 
-function closeAddUserModal() { //TODO PRZERBOIC NA COS CO BEDZIE DZIALAC TYLKO PO PODANIU ADDXLIENTMODAL
+function closeAddUserModal() {
     const modal = document.getElementById('addUserModal');
     const modalInfo = document.querySelector('.modal-content__info');
     modalInfo.textContent = "";

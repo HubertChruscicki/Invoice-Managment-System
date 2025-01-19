@@ -106,7 +106,7 @@ function loadInvoices(limit = 10, offset = 0, namePrefix = '', searchByNipFlag=f
         })
 }
 
-function createPaginationControls(totalPages, currentPage, limit, namePrefix = '') { //todo przepisac na jedna funkcje
+function createPaginationControls(totalPages, currentPage, limit, namePrefix = '') {
     namePrefix = namePrefix.toLowerCase();
     const paginationContainer = document.querySelector('.main-content__pagination');
     paginationContainer.innerHTML = '';
@@ -162,7 +162,6 @@ function createPaginationControls(totalPages, currentPage, limit, namePrefix = '
         nextButton.textContent = '>';
         nextButton.classList.add('main-content__pagination-button');
         if (currentPage < totalPages) {
-            // Dodano przekazanie namePrefix do loadCategories w nextButton
             nextButton.onclick = () => loadInvoices(limit, currentPage * limit, namePrefix);
         } else {
             nextButton.disabled = true;
@@ -219,7 +218,7 @@ function openAddInvoiceModal() {
     });
 }
 
-function closeAddInvoiceModal() { //TODO PRZERBOIC NA COS CO BEDZIE DZIALAC TYLKO PO PODANIU ADDXLIENTMODAL
+function closeAddInvoiceModal() {
     const modal = document.getElementById('addInvoiceModal');
     const modalInfo = document.querySelector('.modal-content__info');
     const chosenClientTbody = document.getElementById('chosenClient');
@@ -262,7 +261,7 @@ function openChooseClientModal() {
 
 
 }
-function closeChooseClientModal() {  //TODO REFRESH WYSZUKWIANIE
+function closeChooseClientModal() {
     const modal = document.getElementById('chooseClientModal');
     const modalInfo = document.querySelector('.modal-content__info');
     modalInfo.textContent = "";
@@ -297,7 +296,7 @@ function openAddProductToInvoiceModal() {
 
 
 }
-function closeAddProductToInvoiceModal() {  //TODO REFRESH WYSZUKWIANIE
+function closeAddProductToInvoiceModal() {
     const modal = document.getElementById('addProductToInvoiceModal');
     const modalInfo = document.querySelector('.modal-content__info');
     modalInfo.textContent = "";
@@ -359,18 +358,18 @@ function addProductToInvoice(id, name, category_name, price_brutto, vat, vat_val
 function updateProductQuantity(productId, newQuantity) {
     const product = productsList.find(p => p.id === productId);
     if (product) {
-        product.quantity = parseInt(newQuantity, 10) || 1; // Zapobiega wartościom nieprawidłowym
+        product.quantity = parseInt(newQuantity, 10) || 1;
     }
 }
 
 function deleteFromInvoice(productId) {
     productsList = productsList.filter(product => product.id !== productId);
-    renderProductList(productsList); // Aktualizacja widoku tabeli
+    renderProductList(productsList);
 }
 
 function getInvoiceDetails(invoice_id){
     var endpoint = `getInvoiceDetails?invoice_id=${invoice_id}`;
-    // var endpoint = `getInvoiceDetails?invoice_id=${encodeURIComponent(invoice_id)}`;
+
     return fetch(endpoint, {
         method: 'GET',
         credentials: 'include'
@@ -451,9 +450,9 @@ function openInvoiceDetailsModal(invoice_id, total_price_brutto, total_price_net
 
 function generateInvoice(invoice_id) {
     console.log(invoice_id);
-    var endpoint = `/generateInvoicePDF?invoice_id=${invoice_id}`; // Relatywny URL
+    var endpoint = `/generateInvoicePDF?invoice_id=${invoice_id}`;
 
-    // Otwórz PDF w nowej karcie przeglądarki
+
     window.open(endpoint, '_blank');
 }
 
