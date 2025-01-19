@@ -23,7 +23,7 @@
         <h1 class="header__left-panel__name">Invoice Manager</h1>
     </div>
 
-    <div class="header__user-content" onclick="logout()">
+    <div class="header__user-content" data-menu-bar="User" onclick="switchMainContent(this)">
         <p class="header__user-content__name"></p>
         <img class="header__user-content__icon" src="data/img/user-icon.png" alt="">
     </div>
@@ -42,7 +42,7 @@
                 <p>Products</p>
             </li>
             <li class="layout__sidebar-menu--item" data-menu-bar="Categories" onclick="switchMainContent(this)">
-                <img src="data/img/products-icon.png" alt="">
+                <img src="data/img/categories-icon.png" alt="">
                 <p>Categories</p>
             </li>
             <li class="layout__sidebar-menu--item" data-menu-bar="Clients" onclick="switchMainContent(this)">
@@ -61,11 +61,13 @@
 </div>
 
 
-<script src="data/js/Categories.js"></script>
+<script src="data/js/Dashboard.js"></script>
 <script src="data/js/Products.js"></script>
+<script src="data/js/Categories.js"></script>
 <script src="data/js/Clients.js"></script>
 <script src="data/js/Invoices.js"></script>
 <script src="data/js/MenuRouter.js"></script>
+<script src="data/js/User.js"></script>
 </body>
 </html>
 

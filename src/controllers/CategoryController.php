@@ -38,7 +38,9 @@ class CategoryController extends AppController
         }
         $categoryRepository->addCategory($category_name, $vat_value);
 
-        return $this->render('main', ['messages' => ['Category successfully added!']]);
+        $url = '/';
+        header("Location: $url");
+        exit;
     }
 
 

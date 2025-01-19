@@ -250,19 +250,17 @@ function openAddProductModal() {
 
         getProducts(1, 0, productName)
             .then((existingProduct) => {
-                console.log(existingProduct);
-
-                if (existingProduct && existingProduct.length > 0) {
-                    console.log("sigma");
-                    modalInfo.style.display = 'flex';
-                    modalInfo.textContent = "Such product exists!";
-                    return; // Zatrzymujemy dalsze przetwarzanie
-                }
 
                 // Walidacja innych pól
                 if (productName === '' || productCategory === '' || priceBrutto === '') {
                     modalInfo.style.display = 'flex';
                     modalInfo.textContent = "You have to fill all fields!";
+                    return;
+                }
+
+                if (existingProduct && existingProduct.length > 0) {
+                    modalInfo.style.display = 'flex';
+                    modalInfo.textContent = "Such product exists!";
                     return;
                 }
 
@@ -282,7 +280,7 @@ function openAddProductModal() {
                     return;
                 }
 
-                form.submit(); // Jeśli wszystko jest OK, wysyłamy formularz
+                form.submit();
             })
             .catch((error) => {
                 console.error("Error fetching products:", error);
@@ -358,8 +356,4 @@ function closeDeleteProductModal() {
 
 
 
-// document.getElementById('category-input').addEventListener('input', (event) => {
-//     const searchTerm = event.target.value;
-//     console.log(searchTerm);
-// });
 

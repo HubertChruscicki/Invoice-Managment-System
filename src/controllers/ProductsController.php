@@ -29,7 +29,7 @@ class ProductsController extends AppController
             $category = CategoryRepository::getInstance()->getCategoryById($id_category);
             $vatPercent = $category->getVat();
             $vatCalculate = 1 + $vatPercent / 100;
-            $price_netto = round($price_brutto / $vatCalculate);
+            $price_netto = round($price_brutto / $vatCalculate, 2);
 
         } catch (Exception $e) {
             error_log($e->getMessage());
@@ -131,7 +131,9 @@ class ProductsController extends AppController
             return;
         }
         $user_id = $_SESSION['id'];
+
         $productName = json_decode(file_get_contents('php://input'), true)['productName'] ?? null;
+
         if($productName) {
             $productsRepository = ProductsRepository::getInstance();
             $deleteSuccess = $productsRepository->deleteProduct((int)$user_id, $productName);

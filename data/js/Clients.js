@@ -1,6 +1,6 @@
 var currentOffset = 0;
 
-function getClients(limit = 1, offset = 0, namePrefix = '', searchByNipFlag= false){
+function getClients(limit = 10, offset = 0, namePrefix = '', searchByNipFlag= false){
     namePrefix = namePrefix.toLowerCase();
     var endpoint =  `getClients?limit=${limit}&offset=${offset}&namePrefix=${namePrefix}&searchByNipFlag=${searchByNipFlag}`;
     return fetch(endpoint, {
@@ -314,7 +314,7 @@ function openDeleteModal(name){ //TODO BIDA NIE DZIALA HEJ
 
 }
 
-function closeDeleteCategoryModal() {
+function closeDeleteClientModal() {
     const modal = document.getElementById('deleteClientModal');
     const modalInfo = document.querySelector('.modal-content__info');
     modalInfo.textContent = "";

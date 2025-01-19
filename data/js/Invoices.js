@@ -73,7 +73,7 @@ function renderCell(invoices)
             <td class="main-content__table-cell">                       
                 <button class="main-content__action-button main-content__action-button--details" onclick="openInvoiceDetailsModal(${invoice.invoice_id}, ${invoice.total_price_brutto}, ${invoice.total_price_netto},${invoice.ammount_of_products}, '${invoice.invoice_date}')">Details</button>
                 <button class="main-content__action-button main-content__action-button--edit" onclick="generateInvoice(${invoice.invoice_id})">PDF</button>
-                <button class="main-content__action-button main-content__action-button--delete" onclick="openDeleteModal('${invoice.name}')">Delete</button>
+                <button class="main-content__action-button main-content__action-button--delete" onclick="openDeleteModal('${invoice.invoice_id}')">Delete</button>
             </td>
         `;
         tbody.appendChild(row)
@@ -190,6 +190,7 @@ function openAddInvoiceModal() {
     modal.style.display = 'flex';
     document.body.classList.add('modal-open');
 
+
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         const clientID = document.getElementById('client-input-id');
@@ -214,8 +215,6 @@ function openAddInvoiceModal() {
 
         productsJSON.value = JSON.stringify(productsList);
 
-        console.log(productsJSON.value);
-        console.log(clientID.value);
         form.submit();
     });
 }
@@ -353,7 +352,7 @@ function addProductToInvoice(id, name, category_name, price_brutto, vat, vat_val
         productsList.push(newProduct);
     }
 
-    renderProductList(productsList); // Aktualizacja widoku tabeli
+    renderProductList(productsList);
     closeAddProductToInvoiceModal();
 }
 
@@ -480,3 +479,55 @@ function closeInvoiceDetailsModal() {
 
 }
 
+function openDeleteModal(invoice_id){
+    const modal = document.getElementById('deleteInvoiceModal');
+    const deleteBttn = document.querySelector('.modal-content__form-section-delete-button');
+    modal.style.display = 'flex';
+    document.body.classList.add('modal-open');
+
+    deleteBttn.addEventListener('click', (event)=>{
+
+
+        const request = JSON.stringify({invocie_id: invoice_id});
+        fetch('deleteInvoice', {
+            method: 'POST',
+            body: request,
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((response)=>{
+                console.log(response);
+                if(!response.ok){
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data)=>{
+                console.log(data);
+                if(data.message === "success"){
+                    modal.style.display = 'none';
+                    document.body.classList.remove('modal-open');
+                    loadInvoices(20, currentOffset);
+                }
+                else{
+                    throw new Error("Error during deleting invoice")
+                }
+            })
+            .catch((error) =>{
+                console.error(error);
+                alert("Something went wrong witch deleting invoice")
+            });
+    })
+
+}
+
+function closeDeleteInvoiceModal() {
+    const modal = document.getElementById('deleteInvoiceModal');
+    const modalInfo = document.querySelector('.modal-content__info');
+    modalInfo.textContent = "";
+    modalInfo.style.display = "none"
+    modal.style.display = 'none';
+    document.body.classList.remove('modal-open');
+}

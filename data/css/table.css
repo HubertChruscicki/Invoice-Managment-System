@@ -36,6 +36,14 @@
     background-color: #00a85f;
 }
 
+.main-content__toolbar-button--logout{
+    background-color: gray;
+    /*margin-left: 25px;*/
+}
+.main-content__toolbar-button--logout:hover{
+    background-color: #555555;
+}
+
 .main-content__table-container {
     max-height: calc(80vh - 200px);
     min-height: 100px;

@@ -24,7 +24,10 @@ class SecurityController extends AppController
         if(password_verify($password, $user->getPassword())){
             $_SESSION['email'] = $user->getEmail();
             $_SESSION['id'] = $user->getId();
-            $this->render('main');
+//            $this->render('main');
+            $url = '/';
+            header("Location: $url");
+            exit;
         }
         else{
             return $this->render('login', ['messages' => ['Wrong password!']]);
@@ -88,6 +91,65 @@ class SecurityController extends AppController
 
         return $this->render('login', ['messages' => ['Successfully registered!']]);
     }
+
+    public function registerUser()
+    {
+        if(!$this->isPost()){
+            return $this->render('main');
+        }
+
+        $creator_user_id = $_SESSION['id'];
+
+        $name = $_POST['userName'];
+        $surname = $_POST['userSurname'];
+        $email = $_POST['userEmail'];
+        $role = $_POST['userRoleID'];
+        $password = $_POST['userPassword'];
+        $passwordConfirm = $_POST['userConfirmPassword'];
+
+        if ($name === '' || $surname === '' || $email === '' || $role === '' || $password === '' || $passwordConfirm === '') {
+            $this->render('main', ['messages' => ['You have to fill all fields!']]);
+            return;
+        }
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->render('main', ['messages' => ['Email is not valid!']]);
+            return;
+        }
+        if (strlen($password) < 8) {
+            $this->render('main', ['messages' => ['Password is too short!']]);
+            return;
+        }
+        if (!preg_match('/[A-Z]/', $password)) {
+            $this->render('main', ['messages' => ['Password must contain at least one capital letter!']]);
+            return;
+        }
+        if (!preg_match('/[0-9]/', $password)) {
+            $this->render('main', ['messages' => ['Password must contain at least one number!']]);
+            return;
+
+        } if ($password !== $passwordConfirm) {
+            $this->render('main', ['messages' => ['Password must identical!']]);
+            return;
+        }
+
+        $email = strtolower($email);
+        $userRepository = UserRepository::getInstance();
+
+        $user = $userRepository->getUser($email);
+        if($user){
+            $this->render('register', ['messages' => ['User with this email already exist!']]);
+            return;
+        }
+
+
+        $hash = password_hash($password, PASSWORD_BCRYPT);
+        $newUser = $userRepository->addUserToCompany($creator_user_id, $name, $surname, $email, $role ,$hash);
+
+        $url = '/';
+        header("Location: $url");
+        exit;
+    }
+
 
     public function logout(){
         session_unset();

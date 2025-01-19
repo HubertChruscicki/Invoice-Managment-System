@@ -33,7 +33,6 @@
 
             <div class="modal-content__info"></div>
 
-
             <form class="add-invoice" action="addInvoice" method="POST">
                 <div class="modal-content__form-section">
                     <input type="hidden" id="client-input-id" name="clientInvoiceID" style="display: none">
@@ -253,6 +252,19 @@
                 </div>
         </div>
     </div>
+
+
+    <div class="modal" id="deleteInvoiceModal">
+        <div class="modal-content">
+            <button class="modal-content__close-button" onclick="closeDeleteInvoiceModal()">&times;</button>
+            <h1 class="modal-content__title">Are you sure</h1>
+            <div class="modal-content__form-section">
+                <button class="modal-content__form-section-button modal-content__form-section-delete-button" class="" type="button">Delete</button>
+            </div>
+        </div>
+    </div>
+
+
 
 
 </div>

@@ -38,7 +38,10 @@ class ClientsController extends AppController
         }
 
         $clientRepository->addClient((int)$user_id, $client_name, $nip, $address, $city, $zip_code, $country);
-        return $this->render('main', ['message' => 'Client successfully added!']);
+
+        $url = '/';
+        header("Location: $url");
+        exit;
     }
 
     public function getSessionId(){

@@ -19,7 +19,7 @@ class InvoiceRepository extends Repository
         return self::$instance;
     }
 
-    public function howManyInvoices(int $user_id, string $namePrefix=null): int
+    public function howManyInvoices(int $user_id, string $namePrefix=null): int //TODO FLAGA $searchByNipFlag I W INNYCH KLASACH
     {
         $baseStmt =
             "SELECT COUNT(*)
@@ -34,7 +34,7 @@ class InvoiceRepository extends Repository
         }
         try{
             $stmt = $this->database->connect()->prepare($baseStmt);
-            $stmt->bindParam('user_id', $user_id, PDO::PARAM_INT);
+            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
             if($namePrefix !== null){
                 $prefixRegex = '^'.$namePrefix;
                 $stmt->bindParam(':namePrefix', $prefixRegex, PDO::PARAM_STR);
@@ -212,6 +212,30 @@ class InvoiceRepository extends Repository
             $db->rollBack();
             error_log($e->getMessage());
             throw new Exception("Failed to add new invoice to database." . $e->getMessage());
+        }
+    }
+
+    public function deleteInvoice($user_id, $invoice_id)
+    {
+        $baseStmt = "
+            UPDATE public.invoice
+                SET is_deleted = true
+                FROM invoice inv
+                JOIN company c ON c.id = inv.id_company
+                JOIN users u ON u.id_company = c.id
+                WHERE u.id = :user_id
+                AND inv.id = :invoice_id AND inv.is_deleted = false AND inv.id = invoice.id";
+
+        $stmt = $this->database->connect()->prepare($baseStmt);
+
+        $stmt->bindParam(":invoice_id", $invoice_id, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        try {
+            $stmt->execute();
+            return true;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
         }
     }
 

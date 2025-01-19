@@ -56,8 +56,6 @@
         </div>
     </div>
 
-
-
     <div class="modal" id="deleteClientModal">
         <div class="modal-content">
             <button class="modal-content__close-button" onclick="closeDeleteClientModal()">&times;</button>
@@ -69,4 +67,3 @@
     </div>
 </div>
 
-<!--<script src="data/js/Clients.js"></script>-->

@@ -99,11 +99,42 @@ class InvoicesController extends AppController
 
             $invoiceRepository = InvoiceRepository::getInstance();
             $invoiceRepository->addInvoice($user_id, $client_id, $date, $productsArray);
-            return $this->render('main', ['message' => 'Invoice successfully added!']); //TODO POZAMIENIAC RENDERY NA HEADERY
+
+            $url = '/';
+            header("Location: $url");
+            exit;
         }
 
 
 
+
+    }
+
+    public function deleteInvoice()
+    {
+        if (!$this->isPost()) {
+            return $this->render('main');
+        }
+        if (session_status() !== PHP_SESSION_ACTIVE || !isset($_SESSION['id'])) {
+            $this->render('main', ['message' => 'Session problem!']);
+            return;
+        }
+        $user_id = $_SESSION['id'];
+        $invoice_id = json_decode(file_get_contents('php://input'), true)['invocie_id'] ?? null;
+
+        if($invoice_id) {
+            $invoiceRepository = InvoiceRepository::getInstance();
+            $deleteSuccess = $invoiceRepository->deleteInvoice((int)$user_id, (int)$invoice_id);
+            if($deleteSuccess) {
+                echo json_encode(["message" => "success"]);
+            }
+            else {
+                echo json_encode(["message" => "fail", "error" => "cant delete invoice"]);
+            }
+        }
+        else {
+            echo json_encode(["message" => "fail", "error" => "Ivoice details deleting problem"]);
+        }
 
     }
 
