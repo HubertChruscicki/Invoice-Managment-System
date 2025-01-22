@@ -6,39 +6,43 @@ Invoice Managment System is a web app that proivde simple system to manage compa
 
 ## Features
 
-- Login:  
+### Login 
   ![Watch stats](readmeImages/img01.png)
 
-- Register:  
+### Register  
   ![Watch stats](readmeImages/img02.png)
 
-- Watch stats  
+### Watch stats  
   ![Watch stats](readmeImages/img1.png)
 
-- Browse, filter records  
+### Browse, filter records  
   ![Filter records](readmeImages/img2.png)
 
-- Add, edit, remove records  
+### Add, edit, remove records  
   ![Add, edit, remove records](readmeImages/img3.png)
 
-- Generate PDF files  
+### Generate PDF files  
   ![Generate PDF files](readmeImages/img4.png)
 
-- Share access  
+### Share access  
   ![Share access](readmeImages/img5.png)
 
-- Add, remove records  
+### Add, remove records  
   ![Share access](readmeImages/img6.png)
 
   ![Share access](readmeImages/img7.png)
 
   ![Share access](readmeImages/img8.png)
 
-- Generate PDF files  
+### Generate PDF files  
   ![Share access](readmeImages/img9.png)
 
-- Share access with other users to manage the company  
+### Share access with other users to manage the company  
   ![Share access](readmeImages/img10.png)
+
+
+
+##Installation
 
 - App requires docker and docker compose to launch
 
