@@ -30,7 +30,7 @@
         <div class="modal-content">
             <button class="modal-content__close-button" onclick="closeAddProductModal()">&times;</button>
 
-            <h1 class="modal-content__title">Add client</h1>
+            <h1 class="modal-content__title">Add product</h1>
 
             <div class="modal-content__info"></div>
 
