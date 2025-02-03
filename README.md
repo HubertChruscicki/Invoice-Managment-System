@@ -42,7 +42,7 @@ Invoice Managment System is a web app that proivde simple system to manage compa
 
 
 
-##Installation
+## Installation
 
 - App requires docker and docker compose to launch
 
